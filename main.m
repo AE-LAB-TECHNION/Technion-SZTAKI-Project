@@ -83,7 +83,7 @@ for i = 1:nV
 
     V = airspeed(i);
 
-    [Aae, Bae, Baw, Cae, Caw, Dae] = buildAESS_state_nof_fixed( ...
+    [Aae, Bae, Baw, Cae, Caw, Dae] = buildAESS_state( ...
         Nel, eigvals, zeta, ...
         RFA_filename, method, ...
         L, V, rho, ...
@@ -95,7 +95,10 @@ for i = 1:nV
     % ---------------------------------------------------------------------
     if isinp == 1
 
-        [Ap, Bp, Cp, Aact, Bact] = buildPlant_from_AESS_fixed(Aae, Bae, Cae, Dae);
+        [Ap, Bp, Bpw] = buildPlant_from_AESS(Aae, Bae, Baw);
+        Cp = [];
+        Aact = [];
+        Bact = [];
 
         Aplot = Ap;
         plotModelName = 'Ap';
@@ -104,6 +107,7 @@ for i = 1:nV
 
         Ap = [];
         Bp = [];
+        Bpw = [];
         Cp = [];
         Aact = [];
         Bact = [];
@@ -133,6 +137,7 @@ for i = 1:nV
 
     models{i}.Ap   = Ap;
     models{i}.Bp   = Bp;
+    models{i}.Bpw  = Bpw;
     models{i}.Cp   = Cp;
     models{i}.Aact = Aact;
     models{i}.Bact = Bact;
@@ -149,7 +154,7 @@ for i = 1:nV
         if isinp == 1
             fprintf('  Ap  : %d x %d\n', size(Ap,1), size(Ap,2));
             fprintf('  Bp  : %d x %d\n', size(Bp,1), size(Bp,2));
-            fprintf('  Cp  : %d x %d\n', size(Cp,1), size(Cp,2));
+            fprintf('  Bpw : %d x %d\n', size(Bpw,1), size(Bpw,2));
         end
 
         fprintf('\nRoot-locus plot uses: %s\n', plotModelName);
@@ -188,7 +193,7 @@ set(gca, 'FontSize', 13);
 % -------------------------------------------------------------------------
 % Flutter estimate
 % -------------------------------------------------------------------------
-[Vf, ff] = find_flutter_daniella(airspeed, eigTraj);
+[Vf, ff] = find_flutter(airspeed, eigTraj);
 
 fprintf('\nFlutter estimate based on %s eigenvalues:\n', plotModelName);
 fprintf('Flutter occurs near V = %.3f m/s\n', Vf);

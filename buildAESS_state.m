@@ -1,7 +1,7 @@
-function [Aae, Bae, Baw, Cae, Caw, Dae] = buildAESS_state_nof_fixed( ...
+function [Aae, Bae, Baw, Cae, Caw, Dae] = buildAESS_state( ...
     Nel, eigvals, zeta, RFA_filename, method, L, V, rho, isinp, isgust, ...
     PSI, PHI, PHI_ROT)
-%BUILDAESS_STATE_NOF
+%BUILDAESS_STATE
 % Build aeroelastic state-space matrices and output matrices.
 %
 % Returns:

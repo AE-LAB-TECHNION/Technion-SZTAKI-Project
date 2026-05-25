@@ -1,4 +1,4 @@
-function [Vf,ff] = find_flutter_daniella(airspeed,eigTraj)
+function [Vf,ff] = find_flutter(airspeed,eigTraj)
 
 R = real(eigTraj);
 S = sign(R);
