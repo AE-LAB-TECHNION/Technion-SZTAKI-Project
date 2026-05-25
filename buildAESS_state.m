@@ -1,5 +1,5 @@
 function [Aae, Bae, Baw, Cae, Caw, Dae] = buildAESS_state( ...
-    Nel, eigvals, zeta, RFA_filename, method, L, V, rho, isinp, isgust, ...
+    Nel, eigvals, zeta, RFA_source, method, L, V, rho, isinp, isgust, ...
     PSI, PHI, PHI_ROT)
 %BUILDAESS_STATE
 % Build aeroelastic state-space matrices and output matrices.
@@ -34,11 +34,19 @@ check_modal_matrix(PHI,     Nel, 'PHI');
 check_modal_matrix(PHI_ROT, Nel, 'PHI_ROT');
 
 % -------------------------------------------------------------------------
-% Read RFA matrices
+% RFA matrices
 % -------------------------------------------------------------------------
-RFA_mat = extractRFAmatrices(RFA_filename, method);
+if isstruct(RFA_source)
+    RFA_mat = RFA_source;
+else
+    if isstring(RFA_source)
+        RFA_source = char(RFA_source);
+    end
+    RFA_mat = extractRFAmatrices(RFA_source, method);
+end
 
-Nhh = size(RFA_mat.A0,1);
+validate_rfa_matrix_struct(RFA_mat);
+
 Nlag = RFA_mat.Nlag;
 
 mode_idx = 1:Nel;
@@ -319,5 +327,15 @@ function check_modal_matrix(X, Nel, name)
 if size(X,2) ~= Nel
     error('%s must have Nel=%d columns, but size(%s,2)=%d.', ...
         name, Nel, name, size(X,2));
+end
+end
+
+% =========================================================================
+function validate_rfa_matrix_struct(RFA_mat)
+requiredFields = {'A0', 'A1', 'A2', 'D', 'E', 'R', 'Nlag'};
+for k = 1:numel(requiredFields)
+    if ~isfield(RFA_mat, requiredFields{k})
+        error('RFA_mat is missing required field "%s".', requiredFields{k});
+    end
 end
 end

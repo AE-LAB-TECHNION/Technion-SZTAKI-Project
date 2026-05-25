@@ -13,6 +13,9 @@ cfg.nmodes = 4;      % number of structural modes to read from ZAERO output
 cfg.RFA_filename = 'APPROX.DAT';
 cfg.ZAERO_filename = 'ASE_ANALYSIS_new.out';
 cfg.f06file = 'model-0012.f06';
+cfg.sensorCacheFile = 'sensor_modal_matrices.mat';
+cfg.useSensorCache = true;
+cfg.rebuildSensorCache = false;
 
 cfg.method = 'MS';   % 'MS' or 'Rg'
 
