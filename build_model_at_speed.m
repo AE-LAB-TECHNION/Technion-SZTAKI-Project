@@ -1,27 +1,37 @@
 function [model, Aplot, plotModelName] = build_model_at_speed(cfg, inputs, V)
 %BUILD_MODEL_AT_SPEED Build aeroelastic and optional plant models at one speed.
 
+includeControlInputs = true;
+modelType = lower(char(cfg.modelType));
+
 [Aae, Bae, Baw, Cae, Caw, Dae] = buildAESS_state( ...
     cfg.Nel, inputs.eigvals, cfg.zeta, ...
     inputs.RFA_mat, cfg.method, ...
     cfg.L, V, cfg.rho, ...
-    cfg.isinp, cfg.isgust, ...
-    inputs.PSI, inputs.PHI, inputs.PHI_ROT);
+    includeControlInputs, cfg.isgust, ...
+    inputs.PSI, inputs.PHI, inputs.PHI_ROT, ...
+    cfg.numControlSurfaces);
 
-if cfg.isinp == 1
-    [Ap, Bp, Bpw] = buildPlant_from_AESS(Aae, Bae, Baw);
-    Aplot = Ap;
-    plotModelName = 'Ap';
-else
-    Ap = [];
-    Bp = [];
-    Bpw = [];
-    Aplot = Aae;
-    plotModelName = 'Aae';
+switch modelType
+    case 'ae'
+        Ap = [];
+        Bp = [];
+        Bpw = [];
+        Aplot = Aae;
+        plotModelName = 'Aae';
+
+    case 'plant'
+        [Ap, Bp, Bpw] = buildPlant_from_AESS(Aae, Bae, Baw);
+        Aplot = Ap;
+        plotModelName = 'Ap';
+
+    otherwise
+        error('Unknown cfg.modelType "%s". Use ''ae'' or ''plant''.', char(cfg.modelType));
 end
 
 model = struct();
 model.V = V;
+model.modelType = modelType;
 
 model.Aae = Aae;
 model.Bae = Bae;

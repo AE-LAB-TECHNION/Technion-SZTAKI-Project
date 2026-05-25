@@ -1,6 +1,6 @@
 function [Aae, Bae, Baw, Cae, Caw, Dae] = buildAESS_state( ...
-    Nel, eigvals, zeta, RFA_source, method, L, V, rho, isinp, isgust, ...
-    PSI, PHI, PHI_ROT)
+    Nel, eigvals, zeta, RFA_source, method, L, V, rho, includeControlInputs, isgust, ...
+    PSI, PHI, PHI_ROT, expectedNctrl)
 %BUILDAESS_STATE
 % Build aeroelastic state-space matrices and output matrices.
 %
@@ -28,6 +28,9 @@ end
 if nargin < 14 || isempty(PHI_ROT)
     PHI_ROT = zeros(0, Nel);
 end
+if nargin < 15
+    expectedNctrl = [];
+end
 
 check_modal_matrix(PSI,     Nel, 'PSI');
 check_modal_matrix(PHI,     Nel, 'PHI');
@@ -47,6 +50,7 @@ end
 
 validate_rfa_matrix_struct(RFA_mat);
 
+Nhh = size(RFA_mat.A0,1);
 Nlag = RFA_mat.Nlag;
 
 mode_idx = 1:Nel;
@@ -86,7 +90,7 @@ Dae = [];
 % -------------------------------------------------------------------------
 % Case 1: no gust, no control input
 % -------------------------------------------------------------------------
-if isgust==0 && isinp==0
+if isgust==0 && includeControlInputs==0
 
     A0h = RFA_mat.A0(mode_idx, mode_idx);
     A1h = RFA_mat.A1(mode_idx, mode_idx);
@@ -112,14 +116,11 @@ if isgust==0 && isinp==0
 % -------------------------------------------------------------------------
 % Case 2: no gust, with control input
 % -------------------------------------------------------------------------
-elseif isgust==0 && isinp==1
+elseif isgust==0 && includeControlInputs==1
 
-    Nctrl = size(RFA_mat.A0,2) - Nel;
-    if Nctrl < 1
-        error('isinp=1, but no control-surface columns were found in RFA_mat.A0.');
-    end
+    Nctrl = infer_control_surface_count(RFA_mat, isgust, expectedNctrl);
 
-    ctrl_idx = Nel+1 : Nel+Nctrl;
+    ctrl_idx = Nhh+1 : Nhh+Nctrl;
 
     A0h = RFA_mat.A0(mode_idx, mode_idx);
     A1h = RFA_mat.A1(mode_idx, mode_idx);
@@ -160,7 +161,7 @@ elseif isgust==0 && isinp==1
 % -------------------------------------------------------------------------
 % Case 3: gust, no control input
 % -------------------------------------------------------------------------
-elseif isgust==1 && isinp==0
+elseif isgust==1 && includeControlInputs==0
 
     gust_idx = size(RFA_mat.A0,2);
 
@@ -196,15 +197,12 @@ elseif isgust==1 && isinp==0
 % -------------------------------------------------------------------------
 % Case 4: gust + control input
 % -------------------------------------------------------------------------
-elseif isgust==1 && isinp==1
+elseif isgust==1 && includeControlInputs==1
 
-    Nctrl = size(RFA_mat.A0,2) - Nel - 1;
-    if Nctrl < 1
-        error('isinp=1 and isgust=1, but no control-surface columns were found.');
-    end
+    Nctrl = infer_control_surface_count(RFA_mat, isgust, expectedNctrl);
 
-    ctrl_idx = Nel+1 : Nel+Nctrl;
-    gust_idx = Nel+Nctrl+1;
+    ctrl_idx = Nhh+1 : Nhh+Nctrl;
+    gust_idx = Nhh+Nctrl+1;
 
     A0h = RFA_mat.A0(mode_idx, mode_idx);
     A1h = RFA_mat.A1(mode_idx, mode_idx);
@@ -245,7 +243,7 @@ elseif isgust==1 && isinp==1
             zeros(Nxae,1),                (1/V)*Eg ];
 
 else
-    error('Invalid combination of isinp=%d and isgust=%d.', isinp, isgust);
+    error('Invalid combination of includeControlInputs=%d and isgust=%d.', includeControlInputs, isgust);
 end
 
 % -------------------------------------------------------------------------
@@ -338,4 +336,22 @@ for k = 1:numel(requiredFields)
         error('RFA_mat is missing required field "%s".', requiredFields{k});
     end
 end
+end
+
+% =========================================================================
+function Nctrl = infer_control_surface_count(RFA_mat, isgust, expectedNctrl)
+
+Nhh = size(RFA_mat.A0, 1);
+Ncols = size(RFA_mat.A0, 2);
+Ngust = double(isgust == 1);
+
+Nctrl = Ncols - Nhh - Ngust;
+if Nctrl < 1
+    error('Control inputs requested, but no control-surface columns were found in RFA_mat.A0.');
+end
+
+if ~isempty(expectedNctrl) && Nctrl ~= expectedNctrl
+    error('Expected %d control surfaces, but RFA_mat.A0 implies %d.', expectedNctrl, Nctrl);
+end
+
 end

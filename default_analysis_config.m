@@ -5,8 +5,9 @@ cfg.rho = 1.225;
 cfg.L = 0.05;        % length scale [m], usually half-chord
 cfg.zeta = 0;        % modal damping ratio
 
-cfg.isinp = 0;       % 1 = plot Ap, 0 = plot Aae
+cfg.modelType = 'ae'; % 'ae' or 'plant'
 cfg.isgust = 0;      % 1 = include gust column, 0 = no gust
+cfg.numControlSurfaces = 4;
 
 cfg.nmodes = 4;      % number of structural modes to read from ZAERO output
 
