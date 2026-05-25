@@ -66,12 +66,56 @@ for mode_id = 1:cfg.Nel
     end
 
     for cs_id = 1:Nctrl
-        figure;
-        bode(sys_xi_mode(:, cs_id), cfg.bodeFrequency);
-        grid on;
+        fig = figure;
+        plot_bode_response(fig, sys_xi_mode(:, cs_id), cfg.bodeFrequency);
 
-        title(sprintf('Bode: %s %d to \\xi_%d, V = %.1f m/s', ...
+        add_bode_title(sprintf('Bode: %s %d to \\xi_%d, V = %.1f m/s', ...
             inputLabel, cs_id, mode_id, models{iV}.V));
+        apply_plot_style(fig, cfg);
+    end
+end
+
+end
+
+function plot_bode_response(fig, sys, frequency)
+
+[mag, phase, wout] = bode(sys, frequency);
+magDb = 20*log10(squeeze(mag));
+phaseDeg = squeeze(phase);
+wout = squeeze(wout);
+
+magDb = magDb(:);
+phaseDeg = phaseDeg(:);
+wout = wout(:);
+
+figure(fig);
+
+axMag = subplot(2, 1, 1);
+semilogx(axMag, wout, magDb);
+ylabel(axMag, 'Magnitude [dB]');
+grid(axMag, 'on');
+box(axMag, 'on');
+
+axPhase = subplot(2, 1, 2);
+semilogx(axPhase, wout, phaseDeg);
+xlabel(axPhase, 'Frequency [rad/s]');
+ylabel(axPhase, 'Phase [deg]');
+grid(axPhase, 'on');
+box(axPhase, 'on');
+
+linkaxes([axMag, axPhase], 'x');
+
+end
+
+function add_bode_title(titleText)
+
+try
+    titleHandle = sgtitle(titleText);
+    set(titleHandle, 'FontWeight', 'normal');
+catch
+    axesHandles = findall(gcf, 'Type', 'axes');
+    if ~isempty(axesHandles)
+        title(axesHandles(end), titleText, 'FontWeight', 'normal');
     end
 end
 

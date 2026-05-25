@@ -28,13 +28,18 @@ cfg.sensor = default_sensor_config();
 
 cfg.airspeed = 25:0.25:50;
 
+% Plotting settings
 cfg.rootLocusFigure = 101;
 cfg.rootLocusXLim = [-100, 100];
 cfg.rootLocusYLim = [0, 200];
 
-cfg.printTimings = true;
-
 cfg.bodeSpeed = 35;  % [m/s]
 cfg.bodeFrequency = logspace(-1, 3, 500); % [rad/s]
+
+cfg.plotFontName = 'Helvetica';
+cfg.plotFontSize = 13;
+cfg.plotTitleFontSize = 14;
+cfg.plotTitleFontWeight = 'normal';
+cfg.plotTextInterpreter = 'tex';
 
 end

@@ -15,8 +15,13 @@ fprintf('Selected modes: ');
 fprintf('%d ', cfg.selected_modes);
 fprintf('\n');
 
-fprintf('Eigenvalues used:\n');
-disp(eigvals(:).');
+freqHz = sqrt(eigvals(:)) / (2*pi);
+
+fprintf('Frequencies used [Hz]:\n');
+fprintf('  %-6s %16s\n', 'Mode', 'Frequency');
+for i = 1:numel(eigvals)
+    fprintf('  %-6d %16.6f\n', cfg.selected_modes(i), freqHz(i));
+end
 
 sensor = cfg.sensor;
 
