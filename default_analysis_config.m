@@ -31,6 +31,8 @@ cfg.rootLocusFigure = 101;
 cfg.rootLocusXLim = [-100, 100];
 cfg.rootLocusYLim = [0, 200];
 
+cfg.printTimings = true;
+
 cfg.bodeSpeed = 35;  % [m/s]
 cfg.bodeFrequency = logspace(-1, 3, 500); % [rad/s]
 
