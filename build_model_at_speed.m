@@ -21,7 +21,7 @@ switch modelType
         plotModelName = 'Aae';
 
     case 'plant'
-        [Ap, Bp, Bpw] = buildPlant_from_AESS(Aae, Bae, Baw);
+        [Ap, Bp, Bpw] = buildPlant_from_AESS(Aae, Bae, Baw, cfg.numControlSurfaces);
         Aplot = Ap;
         plotModelName = 'Ap';
 

@@ -18,10 +18,9 @@ switch modelType
             error('Bae columns must be ordered as [delta; delta_dot; delta_ddot].');
         end
 
-        Nctrl = size(Bae,2) / 3;
-        Bdelta = Bae(:, 1:Nctrl);
-        Bdeltadot = Bae(:, Nctrl+1:2*Nctrl);
-        Bdeltaddot = Bae(:, 2*Nctrl+1:3*Nctrl);
+        NctrlAvailable = size(Bae,2) / 3;
+        Nctrl = control_surface_count_for_plot(cfg, NctrlAvailable);
+        [Bdelta, Bdeltadot, Bdeltaddot] = select_ae_input_groups(Bae, Nctrl, NctrlAvailable);
         inputDescription = 'CS deflection inputs';
         modelDescription = 'aeroelastic Aae';
         inputLabel = 'CS deflection';
@@ -35,7 +34,12 @@ switch modelType
             return
         end
 
-        Nctrl = size(B,2);
+        Nctrl = control_surface_count_for_plot(cfg, size(B,2));
+        if size(B,2) > Nctrl
+            warning(['Plant B matrix has %d actuator command inputs, but cfg.numControlSurfaces is %d. ', ...
+                     'Plotting only the first %d inputs.'], size(B,2), Nctrl, Nctrl);
+            B = B(:, 1:Nctrl);
+        end
         inputDescription = 'actuator command inputs';
         modelDescription = 'plant Ap';
         inputLabel = 'actuator command';
@@ -74,6 +78,34 @@ for mode_id = 1:cfg.Nel
         apply_plot_style(fig, cfg);
     end
 end
+
+end
+
+function Nctrl = control_surface_count_for_plot(cfg, availableCount)
+
+if isfield(cfg, 'numControlSurfaces') && ~isempty(cfg.numControlSurfaces)
+    Nctrl = cfg.numControlSurfaces;
+else
+    Nctrl = availableCount;
+end
+
+if availableCount < Nctrl
+    error('Requested %d control-surface inputs, but only %d are available.', ...
+        Nctrl, availableCount);
+end
+
+end
+
+function [Bdelta, Bdeltadot, Bdeltaddot] = select_ae_input_groups(Bae, Nctrl, availableCount)
+
+if availableCount > Nctrl
+    warning(['Bae contains %d control-surface input groups, but cfg.numControlSurfaces is %d. ', ...
+             'Plotting only the first %d groups.'], availableCount, Nctrl, Nctrl);
+end
+
+Bdelta = Bae(:, 1:Nctrl);
+Bdeltadot = Bae(:, availableCount+1:availableCount+Nctrl);
+Bdeltaddot = Bae(:, 2*availableCount+1:2*availableCount+Nctrl);
 
 end
 

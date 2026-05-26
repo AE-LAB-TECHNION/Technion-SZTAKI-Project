@@ -35,13 +35,15 @@ elseif ~(strcmp(method,'Rg') || strcmp(method,'MS'))
 end
 
 RFA_mat.A0 = Read_out4_to_mat_form(filename,'AH0RB');
-% The size of matrix A0 is [Nhh x Nhh]
+% The size of matrix A0 is [(NM+NLM) x (NM+NC+NG)].
+% Rows are structural modes followed by load modes. Columns are structural
+% modes, control-surface modes, then the gust column when present.
 
 RFA_mat.A1 = Read_out4_to_mat_form(filename,'AH1RB');
-% The size of matrix A1 is [Nhh x Nhh]
+% The size of matrix A1 follows the same partition as A0.
 
 RFA_mat.A2 = Read_out4_to_mat_form(filename,'AH2RB');
-% The size of matrix A2 is [Nhh x Nhh]
+% The size of matrix A2 follows the same partition as A0.
 
 RFA_mat.D = Read_out4_to_mat_form(filename,'DHRB');
 % The size of matrix D depends on the RFA method:

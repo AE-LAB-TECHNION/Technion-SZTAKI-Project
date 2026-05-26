@@ -1,7 +1,7 @@
-function [Vf, ff] = report_flutter(cfg, eigTraj, plotModelName)
+function [Vf, ff] = report_flutter(cfg, eigSource, plotModelName)
 %REPORT_FLUTTER Estimate and print flutter speed/frequency.
 
-[Vf, ff] = find_flutter(cfg.airspeed, eigTraj);
+[Vf, ff] = find_flutter(cfg.airspeed, eigSource, cfg.Nel);
 
 fprintf('\nFlutter estimate based on %s eigenvalues:\n', plotModelName);
 fprintf('Flutter occurs near V = %.3f m/s\n', Vf);

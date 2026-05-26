@@ -5,14 +5,12 @@ cfg.rho = 1.225;
 cfg.L = 0.05;        % length scale [m], usually half-chord
 cfg.zeta = 0;        % modal damping ratio
 
-cfg.modelType = 'ae'; % 'ae' or 'plant'
-cfg.isgust = 0;      % 1 = include gust column, 0 = no gust
-cfg.numControlSurfaces = 4;
-
-cfg.nmodes = 4;      % number of structural modes to read from ZAERO output
+cfg.modelType = 'plant'; % 'ae' or 'plant'
+cfg.isgust = 0;      % fallback if gust count is not reported by ZAERO
+cfg.numControlSurfaces = 4; % fallback if control-surface count is not reported by ZAERO
 
 cfg.RFA_filename = 'APPROX.DAT';
-cfg.ZAERO_filename = 'ASE_ANALYSIS_new.out';
+cfg.ZAERO_filename = 'ASE_ANALYSIS.out';
 cfg.f06file = 'model-0012.f06';
 cfg.sensorCacheFile = 'sensor_modal_matrices.mat';
 cfg.useSensorCache = true;
@@ -20,16 +18,14 @@ cfg.rebuildSensorCache = false;
 
 cfg.method = 'MS';   % 'MS' or 'Rg'
 
-% ZAERO uses modes 1,2,4 because mode 3 is omitted.
-cfg.selected_modes = [1 2 4];
-cfg.Nel = numel(cfg.selected_modes);
-
+% Retained/omitted FEM modes and RFA partitions are derived from ZAERO output.
 cfg.sensor = default_sensor_config();
 
 cfg.airspeed = 25:0.25:50;
 
 % Plotting settings
 cfg.rootLocusFigure = 101;
+cfg.omegaVGFigure = 102;
 cfg.rootLocusXLim = [-100, 100];
 cfg.rootLocusYLim = [0, 200];
 

@@ -49,8 +49,9 @@ else
 end
 
 validate_rfa_matrix_struct(RFA_mat);
+validate_rfa_dimensions(RFA_mat, Nel);
 
-Nhh = size(RFA_mat.A0,1);
+Nhh = Nel;
 Nlag = RFA_mat.Nlag;
 
 mode_idx = 1:Nel;
@@ -118,7 +119,7 @@ if isgust==0 && includeControlInputs==0
 % -------------------------------------------------------------------------
 elseif isgust==0 && includeControlInputs==1
 
-    Nctrl = infer_control_surface_count(RFA_mat, isgust, expectedNctrl);
+    Nctrl = infer_control_surface_count(RFA_mat, Nel, isgust, expectedNctrl);
 
     ctrl_idx = Nhh+1 : Nhh+Nctrl;
 
@@ -199,7 +200,7 @@ elseif isgust==1 && includeControlInputs==0
 % -------------------------------------------------------------------------
 elseif isgust==1 && includeControlInputs==1
 
-    Nctrl = infer_control_surface_count(RFA_mat, isgust, expectedNctrl);
+    Nctrl = infer_control_surface_count(RFA_mat, Nel, isgust, expectedNctrl);
 
     ctrl_idx = Nhh+1 : Nhh+Nctrl;
     gust_idx = Nhh+Nctrl+1;
@@ -339,19 +340,52 @@ end
 end
 
 % =========================================================================
-function Nctrl = infer_control_surface_count(RFA_mat, isgust, expectedNctrl)
+function validate_rfa_dimensions(RFA_mat, Nel)
 
-Nhh = size(RFA_mat.A0, 1);
+matrixNames = {'A0', 'A1', 'A2', 'D'};
+for k = 1:numel(matrixNames)
+    matrixName = matrixNames{k};
+    if size(RFA_mat.(matrixName), 1) < Nel
+        error('RFA_mat.%s has %d rows, but Nel=%d.', ...
+            matrixName, size(RFA_mat.(matrixName), 1), Nel);
+    end
+end
+
+if size(RFA_mat.A0, 2) < Nel || size(RFA_mat.A1, 2) < Nel || size(RFA_mat.A2, 2) < Nel
+    error('RFA A0/A1/A2 matrices must have at least Nel=%d structural columns.', Nel);
+end
+
+if size(RFA_mat.E, 2) < Nel
+    error('RFA_mat.E has %d columns, but Nel=%d.', size(RFA_mat.E, 2), Nel);
+end
+
+end
+
+% =========================================================================
+function Nctrl = infer_control_surface_count(RFA_mat, Nel, isgust, expectedNctrl)
+
 Ncols = size(RFA_mat.A0, 2);
 Ngust = double(isgust == 1);
 
-Nctrl = Ncols - Nhh - Ngust;
-if Nctrl < 1
-    error('Control inputs requested, but no control-surface columns were found in RFA_mat.A0.');
+if ~isempty(expectedNctrl)
+    Nctrl = expectedNctrl;
+    requiredColumns = Nel + Nctrl + Ngust;
+    if Ncols < requiredColumns
+        error(['Expected %d control surfaces, but RFA_mat.A0 has only %d columns. ', ...
+               'At least %d columns are needed for %d retained modes, %d control surfaces, and %d gust inputs.'], ...
+               expectedNctrl, Ncols, requiredColumns, Nel, Nctrl, Ngust);
+    end
+    if Ncols > requiredColumns
+        warning(['RFA_mat.A0 has %d columns, while NM+NC+NG = %d+%d+%d = %d. ', ...
+                 'Columns beyond the ZAERO-reported structural/control/gust partition are ignored.'], ...
+                 Ncols, Nel, Nctrl, Ngust, requiredColumns);
+    end
+    return
 end
 
-if ~isempty(expectedNctrl) && Nctrl ~= expectedNctrl
-    error('Expected %d control surfaces, but RFA_mat.A0 implies %d.', expectedNctrl, Nctrl);
+Nctrl = Ncols - Nel - Ngust;
+if Nctrl < 1
+    error('Control inputs requested, but no control-surface columns were found in RFA_mat.A0.');
 end
 
 end

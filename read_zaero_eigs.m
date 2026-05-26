@@ -1,87 +1,18 @@
 function eigvals = read_zaero_eigs(filename, nmodes)
-%READ_ZAERO_EIGS  Read first nmodes eigenvalues from a ZAERO output file.
+%READ_ZAERO_EIGS Read FEM eigenvalues from a ZAERO output file.
 %
 %   eigvals = READ_ZAERO_EIGS(filename, nmodes)
+%   eigvals = READ_ZAERO_EIGS(filename)
 %
-%   The function looks for the block that starts with the line
-%
-%     'RIGID BODY DEGREES OF FREEDOM (DEFINED IN THE FEM BASIC COORDINATE SYSTEM) =       0'
-%
-%   Then it finds the following header line that contains the word 'EIGENVALUE'
-%   and reads the next nmodes rows of the table. Each of these rows is assumed
-%   to contain, in order:
-%       MODE   EXTRACTION ORDER   EIGENVALUE   FREQ(rad/s)   FREQ(Hz)   GMASS   K
-%   The function returns the third numeric entry on each row (the EIGENVALUE
-%   column, (rad/s)^2) as eigvals(k).
+%   Compatibility wrapper around READ_ZAERO_MODAL_INFO. Without nmodes, it
+%   returns the full eigenvalue lookup vector indexed by FEM mode number.
 
-    if nargin < 2
-        error('Usage: eigvals = read_zaero_eigs(filename, nmodes)');
-    end
+info = read_zaero_modal_info(filename);
 
-    fid = fopen(filename, 'r');
-    if fid == -1
-        error('Could not open file: %s', filename);
-    end
-    cleaner = onCleanup(@() fclose(fid));
+if nargin < 2 || isempty(nmodes)
+    eigvals = info.eigenvaluesByMode;
+else
+    eigvals = info.eigenvalues(1:nmodes);
+end
 
-    %----------------------------------------------------------------------
-    % 1. Find the "rigid body DOF = 0" line
-    %----------------------------------------------------------------------
-    targetRB = 'RIGID BODY DEGREES OF FREEDOM (DEFINED IN THE FEM BASIC COORDINATE SYSTEM)';
-    foundRB  = false;
-
-    while true
-        line = fgetl(fid);
-        if ~ischar(line)
-            break
-        end
-        if contains(line, targetRB)
-            foundRB = true;
-            break
-        end
-    end
-
-    if ~foundRB
-        error('Rigid-body DOF line with "= 0" not found in file %s.', filename);
-    end
-
-    %----------------------------------------------------------------------
-    % 2. From here, find the header line containing "EIGENVALUE"
-    %----------------------------------------------------------------------
-    foundHeader = false;
-    while true
-        line = fgetl(fid);
-        if ~ischar(line)
-            break
-        end
-        if contains(line, 'EIGENVALUE')
-            foundHeader = true;
-            break
-        end
-    end
-
-    if ~foundHeader
-        error('Header line containing "EIGENVALUE" not found after RB DOF line.');
-    end
-
-    %----------------------------------------------------------------------
-    % 3. Read the next nmodes table lines and extract the 3rd numeric column
-    %----------------------------------------------------------------------
-    eigvals = nan(nmodes,1);
-    line = fgetl(fid);
-
-    for k = 1:nmodes
-        line = fgetl(fid);
-        if ~ischar(line)
-            error('End of file reached before reading %d eigenvalues.', nmodes);
-        end
-
-        nums = sscanf(line, '%f');
-        % Expect at least: MODE, EXTRACTION ORDER, EIGENVALUE, ...
-        if numel(nums) < 3
-            error('Could not parse eigenvalue on line %d after header.', k);
-        end
-
-        eigvals(k) = nums(3);  % EIGENVALUE column (RAD/S)^2
-    end
 end
