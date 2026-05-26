@@ -18,6 +18,7 @@
 - Ensure MATLAB syntax is valid
 - Check for dimension mismatches
 - Preserve current outputs unless explicitly changing behavior
+- Check both the Plant and AE models for each change
 
 ## MATLAB Style
 - Use clear variable names
