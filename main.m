@@ -1,11 +1,6 @@
 clc; clear; close all;
 clear functions;
 
-% -------------------------------------------------------------------------
-% Defaults
-% -------------------------------------------------------------------------
-run('./defaults.m')
-
 cfg = default_analysis_config();
 
 [inputs, cfg] = load_analysis_inputs(cfg);

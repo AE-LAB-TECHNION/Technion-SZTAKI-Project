@@ -36,6 +36,12 @@ cfg.plotFontName = 'Helvetica';
 cfg.plotFontSize = 13;
 cfg.plotTitleFontSize = 14;
 cfg.plotTitleFontWeight = 'normal';
+cfg.plotAxesFontWeight = 'normal';
+cfg.plotAxesLineWidth = 1.0;
+cfg.plotLineWidth = 1.5;
+cfg.plotTextColor = 'black';
 cfg.plotTextInterpreter = 'tex';
+cfg.plotLegendInterpreter = cfg.plotTextInterpreter;
+cfg.plotTickLabelInterpreter = cfg.plotTextInterpreter;
 
 end

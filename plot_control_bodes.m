@@ -71,6 +71,7 @@ for mode_id = 1:cfg.Nel
 
     for cs_id = 1:Nctrl
         fig = figure;
+        apply_plot_style(fig, cfg);
         plot_bode_response(fig, sys_xi_mode(:, cs_id), cfg.bodeFrequency);
 
         add_bode_title(sprintf('Bode: %s %d to \\xi_%d, V = %.1f m/s', ...
