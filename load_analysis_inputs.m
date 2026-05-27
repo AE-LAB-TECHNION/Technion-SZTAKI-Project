@@ -5,7 +5,7 @@ validate_run_folder_inputs(cfg);
 
 RFA_mat = extractRFAmatrices(cfg.RFA_filename, cfg.method);
 zaeroModalInfo = read_zaero_modal_info(cfg.ZAERO_filename);
-require_omitted_modes_from_zaero(zaeroModalInfo, cfg.ZAERO_filename);
+validate_omitted_modes_from_zaero(zaeroModalInfo, cfg.ZAERO_filename);
 
 cfg.Nel = derive_retained_mode_count(RFA_mat, zaeroModalInfo);
 cfg.numControlSurfaces = derive_count_from_zaero( ...
@@ -115,19 +115,13 @@ end
 end
 
 % =========================================================================
-function require_omitted_modes_from_zaero(zaeroModalInfo, filename)
+function validate_omitted_modes_from_zaero(zaeroModalInfo, filename)
 
-if ~isempty(zaeroModalInfo.omittedModes)
-    return
-end
-
-if zaeroModalInfo.hasOmitmodCard
+if zaeroModalInfo.hasOmitmodCard && isempty(zaeroModalInfo.omittedModes)
     error(['ZAERO output contains an OMITMOD card, but no omitted mode numbers could be parsed.\n', ...
            'Check the OMITMOD formatting in: %s'], filename);
 end
 
-error(['Could not find omitted mode numbers in the ZAERO output file.\n', ...
-       'Expected an OMITTED MODES report or OMITMOD card in: %s'], filename);
 end
 
 % =========================================================================
