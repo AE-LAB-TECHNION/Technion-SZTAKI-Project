@@ -1,7 +1,9 @@
-function [Vf, ff, data] = plot_omega_v_g(cfg, eigSource, plotModelName)
+function [Vf, ff, data] = plot_omega_v_g(cfg, ~, ~)
 %PLOT_OMEGA_V_G Plot physical modal frequency and damping versus airspeed.
 
-data = omega_v_g_data(cfg.airspeed, eigSource, cfg.Nel);
+data = read_zaero_vgf_data(cfg.ZAERO_filename, cfg.Nel);
+fprintf('\nomega-V-g plot uses ZAERO V-G-F data from %s.\n', cfg.ZAERO_filename);
+
 Vf = data.flutter.Vf;
 ff = data.flutter.ff;
 
@@ -21,40 +23,41 @@ hold(axDamp, 'on');
 grid(axDamp, 'on');
 box(axDamp, 'on');
 
+airspeed = data.airspeed;
 numModes = size(data.frequencyHz, 1);
 colors = lines(numModes);
 labels = mode_labels(cfg, numModes);
 
 for modeIdx = 1:numModes
-    plot(axFreq, cfg.airspeed, data.frequencyHz(modeIdx, :), ...
+    plot(axFreq, airspeed, data.frequencyHz(modeIdx, :), ...
         'Color', colors(modeIdx, :), ...
+        'Marker', 'o', ...
         'DisplayName', labels{modeIdx});
 
-    plot(axDamp, cfg.airspeed, data.dampingG(modeIdx, :), ...
+    plot(axDamp, airspeed, data.dampingG(modeIdx, :), ...
         'Color', colors(modeIdx, :), ...
+        'Marker', 'o', ...
         'DisplayName', labels{modeIdx});
 end
 
-plot(axDamp, [min(cfg.airspeed), max(cfg.airspeed)], [0, 0], ...
+plot(axDamp, [min(airspeed), max(airspeed)], [0, 0], ...
     'k:', 'HandleVisibility', 'off');
 
 ylabel(axFreq, 'Frequency [Hz]');
 ylabel(axDamp, 'Damping g [-]');
 xlabel(axDamp, 'Airspeed [m/s]');
-title(axFreq, sprintf('omega-V-g of %s Physical Modes', plotModelName));
-
-legend(axFreq, 'Location', 'best');
+ylim(axDamp, cfg_value(cfg, 'omegaVGDampingYLim', [-0.5, 0.5]));
 
 if data.flutter.hasFlutter
     add_flutter_marker(axFreq, Vf, ff);
     add_flutter_marker(axDamp, Vf, 0);
-    add_flutter_label(axFreq, Vf, ff, cfg.airspeed);
+    add_flutter_label(axFreq, Vf, ff, airspeed);
 else
     fprintf('\nomega-V-g plot: no damping zero crossing found.\n');
 end
 
 linkaxes([axFreq, axDamp], 'x');
-xlim(axFreq, [min(cfg.airspeed), max(cfg.airspeed)]);
+xlim(axFreq, [min(airspeed), max(airspeed)]);
 
 apply_plot_style(fig, cfg);
 

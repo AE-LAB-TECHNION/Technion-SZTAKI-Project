@@ -12,4 +12,6 @@ plot_omega_v_g(cfg, models, 'Aae');
 
 [Vf, ff] = report_flutter(cfg, models, 'Aae physical modes');
 
-plot_control_bodes(cfg, models);
+if cfg.plotBode
+    plot_control_bodes(cfg, models);
+end
