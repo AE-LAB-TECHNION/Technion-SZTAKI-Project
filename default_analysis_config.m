@@ -10,7 +10,7 @@ cfg.isgust = 0;      % fallback if gust count is not reported by ZAERO
 cfg.numControlSurfaces = 4; % fallback if control-surface count is not reported by ZAERO
 
 cfg.RFA_filename = 'APPROX.DAT';
-cfg.ZAERO_filename = 'ASE_ANALYSIS.out';
+cfg.ZAERO_filename = 'ASE_ANALYSIS_new.out';
 cfg.f06file = 'model-0012.f06';
 cfg.sensorCacheFile = 'sensor_modal_matrices.mat';
 cfg.useSensorCache = true;
@@ -27,6 +27,11 @@ cfg.airspeed = 25:0.25:50;
 cfg.plotBode = false;
 cfg.bodeSpeed = 35;  % [m/s]
 cfg.bodeFrequency = logspace(-1, 3, 500); % [rad/s]
+
+% Diagnostic strain-mode plots. Requires cfg.datFile to exist.
+cfg.plotStrainModes = true;
+cfg.normalizeStrainModes = true;
+cfg.datFile = 'C:\Users\Nofar\Documents\עבודה\ZAERO\old\AESS\MODEL-0012.dat';
 
 % Plotting settings
 

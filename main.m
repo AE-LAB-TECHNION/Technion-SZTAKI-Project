@@ -10,6 +10,10 @@ cfg = default_analysis_config();
 plot_root_locus(cfg, eigTraj, plotModelName);
 plot_omega_v_g(cfg, models, 'Aae');
 
+if isfield(cfg, 'plotStrainModes') && cfg.plotStrainModes
+    plot_strain_modes(cfg, inputs);
+end
+
 [Vf, ff] = report_flutter(cfg, models, 'Aae physical modes');
 
 if cfg.plotBode
