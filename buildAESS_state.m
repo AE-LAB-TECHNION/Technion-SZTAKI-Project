@@ -1,13 +1,13 @@
 function [Aae, Bae, Baw, Cae, Caw, Dae] = buildAESS_state( ...
     Nel, eigvals, zeta, RFA_source, method, L, V, rho, includeControlInputs, isgust, ...
-    PSI, PHI, PHI_ROT, expectedNctrl)
+    PSI, PHI, PHI_ROT, expectedNctrl, expectedNgust)
 %BUILDAESS_STATE
 % Build aeroelastic state-space matrices and output matrices.
 %
 % Returns:
 %   Aae  - aeroelastic state matrix
 %   Bae  - input matrix for control-surface inputs u_ae = [delta; delta_dot; delta_ddot]
-%   Baw  - input matrix for gust input wbar = [w_g/V; wdot_g/V]
+%   Baw  - input matrix for gust inputs wbar = [w_g/V; wdot_g/V] per gust vector
 %   Cae  - output matrix for sensor outputs
 %   Caw  - direct gust-output matrix
 %   Dae  - direct control-output matrix
@@ -28,8 +28,11 @@ end
 if nargin < 14 || isempty(PHI_ROT)
     PHI_ROT = zeros(0, Nel);
 end
-if nargin < 15
+if nargin < 14
     expectedNctrl = [];
+end
+if nargin < 15
+    expectedNgust = [];
 end
 
 check_modal_matrix(PSI,     Nel, 'PSI');
@@ -119,7 +122,7 @@ if isgust==0 && includeControlInputs==0
 % -------------------------------------------------------------------------
 elseif isgust==0 && includeControlInputs==1
 
-    Nctrl = infer_control_surface_count(RFA_mat, Nel, isgust, expectedNctrl);
+    Nctrl = infer_control_surface_count(RFA_mat, Nel, 0, expectedNctrl);
 
     ctrl_idx = Nhh+1 : Nhh+Nctrl;
 
@@ -164,7 +167,8 @@ elseif isgust==0 && includeControlInputs==1
 % -------------------------------------------------------------------------
 elseif isgust==1 && includeControlInputs==0
 
-    gust_idx = size(RFA_mat.A0,2);
+    Ngust = infer_gust_input_count(RFA_mat, Nel, 0, expectedNgust);
+    gust_idx = Nhh + (1:Ngust);
 
     A0h = RFA_mat.A0(mode_idx, mode_idx);
     A1h = RFA_mat.A1(mode_idx, mode_idx);
@@ -190,20 +194,21 @@ elseif isgust==1 && includeControlInputs==0
 
     Bae = zeros(size(Aae,1),0);
 
-    % wbar = [w_g/V; wdot_g/V]
-    Baw = [ zeros(Nel,1),                 zeros(Nel,1); ...
-            qdyn/V*invMbar*A0g,           qdyn*L/V^2*invMbar*A1g; ...
-            zeros(Nxae,1),                (1/V)*Eg ];
+    % wbar = [w_g/V for each gust vector; wdot_g/V for each gust vector]
+    Baw = [ zeros(Nel, Ngust),            zeros(Nel, Ngust); ...
+            qdyn*invMbar*A0g,             qdyn*(L/V)*invMbar*A1g; ...
+            zeros(Nxae, Ngust),           Eg ];
 
 % -------------------------------------------------------------------------
 % Case 4: gust + control input
 % -------------------------------------------------------------------------
 elseif isgust==1 && includeControlInputs==1
 
-    Nctrl = infer_control_surface_count(RFA_mat, Nel, isgust, expectedNctrl);
+    Ngust = infer_gust_input_count(RFA_mat, Nel, expectedNctrl, expectedNgust);
+    Nctrl = infer_control_surface_count(RFA_mat, Nel, Ngust, expectedNctrl);
 
     ctrl_idx = Nhh+1 : Nhh+Nctrl;
-    gust_idx = Nhh+Nctrl+1;
+    gust_idx = Nhh+Nctrl+(1:Ngust);
 
     A0h = RFA_mat.A0(mode_idx, mode_idx);
     A1h = RFA_mat.A1(mode_idx, mode_idx);
@@ -238,10 +243,10 @@ elseif isgust==1 && includeControlInputs==1
             qdyn*invMbar*A0c,               qdyn*(L/V)*invMbar*A1c,            zeros(Nel, Nctrl); ...
             zeros(Nxae, Nctrl),             Ec,                                zeros(Nxae, Nctrl) ];
 
-    % wbar = [w_g/V; wdot_g/V]
-    Baw = [ zeros(Nel,1),                 zeros(Nel,1); ...
-            qdyn/V*invMbar*A0g,           qdyn*L/V^2*invMbar*A1g; ...
-            zeros(Nxae,1),                (1/V)*Eg ];
+    % wbar = [w_g/V for each gust vector; wdot_g/V for each gust vector]
+    Baw = [ zeros(Nel, Ngust),            zeros(Nel, Ngust); ...
+            qdyn*invMbar*A0g,             qdyn*(L/V)*invMbar*A1g; ...
+            zeros(Nxae, Ngust),           Eg ];
 
 else
     error('Invalid combination of includeControlInputs=%d and isgust=%d.', includeControlInputs, isgust);
@@ -362,22 +367,21 @@ end
 end
 
 % =========================================================================
-function Nctrl = infer_control_surface_count(RFA_mat, Nel, isgust, expectedNctrl)
+function Nctrl = infer_control_surface_count(RFA_mat, Nel, Ngust, expectedNctrl)
 
 Ncols = size(RFA_mat.A0, 2);
-Ngust = double(isgust == 1);
 
 if ~isempty(expectedNctrl)
     Nctrl = expectedNctrl;
     requiredColumns = Nel + Nctrl + Ngust;
     if Ncols < requiredColumns
-        error(['Expected %d control surfaces, but RFA_mat.A0 has only %d columns. ', ...
-               'At least %d columns are needed for %d retained modes, %d control surfaces, and %d gust inputs.'], ...
-               expectedNctrl, Ncols, requiredColumns, Nel, Nctrl, Ngust);
+        error(['Expected %d control surfaces and %d gust vector(s), but RFA_mat.A0 has only %d columns. ', ...
+               'At least %d columns are needed for %d retained modes, %d control surfaces, and %d gust vector(s).'], ...
+               Nctrl, Ngust, Ncols, requiredColumns, Nel, Nctrl, Ngust);
     end
     if Ncols > requiredColumns
         warning(['RFA_mat.A0 has %d columns, while NM+NC+NG = %d+%d+%d = %d. ', ...
-                 'Columns beyond the ZAERO-reported structural/control/gust partition are ignored.'], ...
+                 'Columns beyond the structural/control/gust partition are ignored.'], ...
                  Ncols, Nel, Nctrl, Ngust, requiredColumns);
     end
     return
@@ -386,6 +390,36 @@ end
 Nctrl = Ncols - Nel - Ngust;
 if Nctrl < 1
     error('Control inputs requested, but no control-surface columns were found in RFA_mat.A0.');
+end
+
+end
+
+% =========================================================================
+function Ngust = infer_gust_input_count(RFA_mat, Nel, expectedNctrl, expectedNgust)
+
+Ncols = size(RFA_mat.A0, 2);
+
+if ~isempty(expectedNgust)
+    Ngust = expectedNgust;
+else
+    if isempty(expectedNctrl)
+        Ngust = 1;
+        warning(['Number of gust vectors was not provided. Assuming one gust vector. ', ...
+                 'Set cfg.numGustInputs to avoid this ambiguity.']);
+    else
+        Ngust = Ncols - Nel - expectedNctrl;
+    end
+end
+
+if Ngust < 1
+    error(['Gust input was requested, but no gust columns were found in RFA_mat.A0. ', ...
+           'Check cfg.numGustInputs, cfg.numControlSurfaces, and the APPROX.DAT file.']);
+end
+
+requiredColumns = Nel + max(expectedNctrl, 0) + Ngust;
+if ~isempty(expectedNctrl) && Ncols < requiredColumns
+    error(['Expected %d control surfaces and %d gust vector(s), but RFA_mat.A0 has only %d columns. ', ...
+           'At least %d columns are needed.'], expectedNctrl, Ngust, Ncols, requiredColumns);
 end
 
 end

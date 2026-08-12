@@ -11,7 +11,8 @@ cfg.Nel = derive_retained_mode_count(RFA_mat, zaeroModalInfo);
 cfg.numControlSurfaces = derive_count_from_zaero( ...
     zaeroModalInfo.numControlSurfaceModes, cfg, 'numControlSurfaces', 0, ...
     'control-surface modes');
-cfg.isgust = derive_gust_flag_from_zaero(zaeroModalInfo, cfg, RFA_mat);
+cfg.numGustInputs = derive_gust_count_from_zaero(zaeroModalInfo, cfg, RFA_mat);
+cfg.isgust = double(cfg.numGustInputs > 0);
 cfg.selected_modes = derive_selected_modes(zaeroModalInfo.femModeNumbers, ...
     zaeroModalInfo.omittedModes, cfg.Nel);
 
@@ -32,7 +33,7 @@ fprintf('F06 mode numbers used in aeroelastic model: ');
 fprintf('%d ', cfg.selected_modes);
 fprintf('\n');
 fprintf('Number of control-surface modes in ZAERO RFA: %d\n', cfg.numControlSurfaces);
-fprintf('Number of gust columns used for RFA partition: %d\n', cfg.isgust);
+fprintf('Number of gust vectors used for RFA partition: %d\n', cfg.numGustInputs);
 if ~isnan(zaeroModalInfo.numLoadModes)
     fprintf('Number of LOADMOD rows in ZAERO RFA: %d\n', zaeroModalInfo.numLoadModes);
 end
@@ -185,45 +186,45 @@ end
 end
 
 % =========================================================================
-function isgust = derive_gust_flag_from_zaero(zaeroModalInfo, cfg, RFA_mat)
+function numGustInputs = derive_gust_count_from_zaero(zaeroModalInfo, cfg, RFA_mat)
 
 numGustModes = zaeroModalInfo.numGustModes;
 numColumns = size(RFA_mat.A0, 2);
 columnsWithoutGust = cfg.Nel + cfg.numControlSurfaces;
-hasExtraColumn = numColumns >= columnsWithoutGust + 1;
+extraColumns = max(numColumns - columnsWithoutGust, 0);
+hasCfgValue = isfield(cfg, 'numGustInputs') && ~isempty(cfg.numGustInputs);
 
-if ~isnan(numGustModes)
-    isgust = double(numGustModes > 0);
-    inferredFromExtraColumn = false;
+if extraColumns > 0 && zaeroModalInfo.hasGustInput
+    numGustInputs = extraColumns;
 
-    if isgust == 0 && hasExtraColumn && zaeroModalInfo.hasGustInput
-        isgust = 1;
-        inferredFromExtraColumn = true;
-        warning(['ZAERO reports NUMBER OF GUST MODES=0, but GENGUST/DGUST/CGUST input ', ...
-                 'and an extra RFA column were detected. Treating the final RFA column as gust.']);
+    if ~isnan(numGustModes) && numGustModes ~= numGustInputs
+        warning(['ZAERO reports %d gust mode(s), but APPROX.DAT has %d extra RFA column(s). ', ...
+                 'Using the APPROX.DAT column count for gust vectors.'], ...
+                 numGustModes, numGustInputs);
     end
-
-    if ~inferredFromExtraColumn && isfield(cfg, 'isgust') && ~isempty(cfg.isgust) && cfg.isgust ~= isgust
-        warning(['ZAERO reports %d gust columns, but cfg.isgust is %d. ', ...
-                 'Using the ZAERO value.'], numGustModes, cfg.isgust);
+    if hasCfgValue && cfg.numGustInputs ~= numGustInputs
+        warning(['APPROX.DAT indicates %d gust vector(s), but cfg.numGustInputs is %d. ', ...
+                 'Using the APPROX.DAT value.'], numGustInputs, cfg.numGustInputs);
     end
     return
 end
 
-if isfield(cfg, 'isgust') && ~isempty(cfg.isgust)
-    isgust = cfg.isgust;
+if ~isnan(numGustModes)
+    numGustInputs = numGustModes;
+    if hasCfgValue && cfg.numGustInputs ~= numGustInputs
+        warning(['ZAERO indicates %d gust vector(s), but cfg.numGustInputs is %d. ', ...
+                 'Using the ZAERO value.'], numGustInputs, cfg.numGustInputs);
+    end
+    return
+end
+
+if hasCfgValue
+    numGustInputs = cfg.numGustInputs;
 else
-    isgust = 0;
-end
-
-if isgust == 0 && hasExtraColumn && zaeroModalInfo.hasGustInput
-    isgust = 1;
-    warning(['GENGUST/DGUST/CGUST input and an extra RFA column were detected. ', ...
-             'Treating the final RFA column as gust.']);
+    numGustInputs = 0;
 end
 
 end
-
 % =========================================================================
 function selectedModes = derive_selected_modes(femModeNumbers, omittedModes, numRetainedModes)
 
