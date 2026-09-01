@@ -194,10 +194,18 @@ columnsWithoutGust = cfg.Nel + cfg.numControlSurfaces;
 extraColumns = max(numColumns - columnsWithoutGust, 0);
 hasCfgValue = isfield(cfg, 'numGustInputs') && ~isempty(cfg.numGustInputs);
 
-if extraColumns > 0 && zaeroModalInfo.hasGustInput
+% APPROX.DAT is the authoritative source for the RFA input partition.  An
+% extra column after the retained structural and control-surface columns is
+% a gust vector even when the textual ZAERO report does not label it.
+if extraColumns > 0
     numGustInputs = extraColumns;
 
-    if ~isnan(numGustModes) && numGustModes ~= numGustInputs
+    if ~zaeroModalInfo.hasGustInput
+        warning(['APPROX.DAT contains %d extra RFA input column(s) after ', ...
+            'the structural and control columns, although the ZAERO report ', ...
+            'does not explicitly identify gust vectors. Treating the extra ', ...
+            'column(s) as gust inputs.'],numGustInputs);
+    elseif ~isnan(numGustModes) && numGustModes ~= numGustInputs
         warning(['ZAERO reports %d gust mode(s), but APPROX.DAT has %d extra RFA column(s). ', ...
                  'Using the APPROX.DAT column count for gust vectors.'], ...
                  numGustModes, numGustInputs);

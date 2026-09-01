@@ -10,8 +10,8 @@ cfg.isgust = 0;      % fallback if gust count is not reported by ZAERO
 cfg.numControlSurfaces = 4; % fallback if control-surface count is not reported by ZAERO
 cfg.numGustInputs = []; % derived from ZAERO/RFA when gust columns exist
 
-cfg.RFA_filename = 'APPROX.DAT';
-cfg.ZAERO_filename = 'ASE_ANALYSIS_new.out';
+cfg.RFA_filename = 'APPROX_DRYDEN.DAT';
+cfg.ZAERO_filename = 'ASE_ANALYSIS_DRYDEN.out';
 cfg.f06file = 'model-0012.f06';
 cfg.sensorCacheFile = 'sensor_modal_matrices.mat';
 cfg.useSensorCache = true;
@@ -64,6 +64,14 @@ cfg.drydenTau = 0.002;              % [s], added high-frequency LPF
 cfg.drydenTime = 0:0.001:60;        % [s]
 cfg.drydenRandomSeed = 1;
 cfg.drydenWindProfileMaxAltitude = 30; % [m], wind-parameter plot limit
+cfg.drydenQhgFile = 'QHG.DAT';        % ZAERO generalized gust forces
+cfg.drydenFrfFile = 'DRYFRF';         % ASEOUT file read by frfrd.m
+cfg.drydenFrequencyStart = 0;         % [Hz]
+cfg.drydenFrequencyStep = 0.01;       % [Hz]
+cfg.drydenFrequencyEnd = 100;         % [Hz]
+cfg.compareDrydenFrf = true;
+cfg.compareDrydenZaero = true;
+cfg.drydenZaeroResponseFile = 'DRY.PLT';
 
 % Plotting settings
 
@@ -86,4 +94,19 @@ cfg.plotTextInterpreter = 'tex';
 cfg.plotLegendInterpreter = cfg.plotTextInterpreter;
 cfg.plotTickLabelInterpreter = cfg.plotTextInterpreter;
 
+% Analysis selection and output behavior.
+cfg.analysis.rootLocus = true;
+cfg.analysis.omegaVG = cfg.plotOmegaVG;
+cfg.analysis.stepResponse = cfg.plotStepResponse;
+cfg.analysis.strainModes = cfg.plotStrainModes;
+cfg.analysis.bode = cfg.plotBode;
+cfg.analysis.gust = cfg.plotGustValidation;
+cfg.analysis.gustModel = cfg.gustModel;
+
+cfg.output.showFigures = true;
+cfg.output.saveFigures = false;
+cfg.output.figureDirectory = fullfile('output', 'figures');
+cfg.output.figureResolution = 300;
+
 end
+

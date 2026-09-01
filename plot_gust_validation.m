@@ -314,7 +314,6 @@ end
 
 xlabel('Time [s]');
 apply_plot_style(fig, cfg);
-exportgraphics(fig, 'gust_modal_displacement.png', 'Resolution', 300);
 
 % -------------------------------------------------------------------------
 % Modal velocity
@@ -370,7 +369,6 @@ end
 
 xlabel('Time [s]');
 apply_plot_style(fig, cfg);
-exportgraphics(fig, 'gust_modal_velocity.png', 'Resolution', 300);
 
 end
 
@@ -395,7 +393,6 @@ if cfg_value(cfg, 'gustZoomInput', true)
 end
 
 apply_plot_style(fig, cfg);
-exportgraphics(fig, 'gust_omcos_input.png', 'Resolution', 300);
 
 end
 

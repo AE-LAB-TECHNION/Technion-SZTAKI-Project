@@ -2,6 +2,25 @@
 
 This repository is a compact MATLAB aeroelastic and flutter analysis workflow built around ZAERO and F06 output files.
 
+## Running The Analysis
+
+`main.m` keeps configuration, calculation, plotting, and file output as
+separate steps:
+
+```matlab
+cfg = default_analysis_config();
+results = run_analysis(cfg);
+plot_analysis_results(cfg, results);
+save_analysis_figures(cfg);
+```
+
+Figures are shown by default and are not saved. To save all generated
+figures as PNG files under `output/figures`, set:
+
+```matlab
+cfg.output.saveFigures = true;
+```
+
 ## Main Workflow
 
 The main entry point is `main.m`. It:

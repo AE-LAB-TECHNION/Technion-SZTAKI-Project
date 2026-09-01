@@ -1,4 +1,4 @@
-function result = run_dryden_response(cfg, inputs, models)
+function result = run_dryden_response(cfg, ~, models)
 %RUN_DRYDEN_RESPONSE Simulate the plant driven by Dryden turbulence.
 
 result = struct();
@@ -118,13 +118,6 @@ fprintf('Continuous white-noise scale = %.6g\n', dryden.inputNoiseScale);
 fprintf('LPF tau = %.6g s, random seed = %d\n', tau, seed);
 fprintf('Augmented state size = %d\n', size(Aaug,1));
 
-plot_dryden_gust(cfg, time, gustPhysical, gustNormalized);
-plot_dryden_modal_response(cfg, time, modalX, modalV);
-plot_dryden_modal_psd(cfg, Aaug, Gaug, Nel, dt);
-plot_dryden_psd(cfg, time, gustPhysical(:,1), dryden);
-plot_dryden_wind_parameters( ...
-    cfg, h, referenceHeight, u20, z0, meanWindAtAltitude, Lw, sigmaW);
-
 result.time = time;
 result.whiteNoise = whiteNoise;
 result.gustPhysical = gustPhysical;
@@ -136,6 +129,8 @@ result.A = Aaug;
 result.G = Gaug;
 result.dryden = dryden;
 result.realizedRmsWg = realizedRmsWg;
+result.dt = dt;
+result.Nel = Nel;
 result.windParameters = struct( ...
     'altitude', h, ...
     'referenceHeight', referenceHeight, ...
@@ -144,184 +139,6 @@ result.windParameters = struct( ...
     'meanWindAtAltitude', meanWindAtAltitude, ...
     'scaleLength', Lw, ...
     'sigmaW', sigmaW);
-
-end
-
-% =========================================================================
-function plot_dryden_gust(cfg, time, gustPhysical, gustNormalized)
-
-fig = figure('Name', 'Dryden gust input');
-apply_plot_style(fig, cfg);
-tiledlayout(2,1,'TileSpacing','compact');
-
-nexttile;
-plot(time, gustPhysical(:,1), 'LineWidth', cfg_value(cfg,'plotLineWidth',1.5));
-grid on; box on;
-ylabel('w_g [m/s]');
-
-nexttile;
-plot(time, gustNormalized(:,1), 'LineWidth', cfg_value(cfg,'plotLineWidth',1.5));
-grid on; box on;
-xlabel('Time [s]');
-ylabel('w_g/V');
-
-apply_plot_style(fig, cfg);
-exportgraphics(fig, 'dryden_gust_input.png', 'Resolution', 300);
-
-end
-
-% =========================================================================
-function plot_dryden_modal_response(cfg, time, modalX, modalV)
-
-Nel = size(modalX,2);
-fig = figure('Name', 'Dryden modal response');
-apply_plot_style(fig, cfg);
-tiledlayout(Nel,2,'TileSpacing','compact');
-
-for k = 1:Nel
-    nexttile;
-    plot(time, modalX(:,k), 'LineWidth', cfg_value(cfg,'plotLineWidth',1.5));
-    grid on; box on;
-    ylabel(sprintf('\\xi_%d',k));
-
-    nexttile;
-    plot(time, modalV(:,k), 'LineWidth', cfg_value(cfg,'plotLineWidth',1.5));
-    grid on; box on;
-    ylabel(sprintf('d\\xi_%d/dt',k));
-end
-
-xlabel('Time [s]');
-apply_plot_style(fig, cfg);
-exportgraphics(fig, 'dryden_modal_response.png', 'Resolution', 300);
-
-end
-
-% =========================================================================
-function plot_dryden_modal_psd(cfg, Aaug, Gaug, Nel, dt)
-
-sampleFrequency = 1/dt;
-frequency = logspace(-2,log10(sampleFrequency/2),1200);
-naug = size(Aaug,1);
-
-% Outputs are the retained modal displacements and velocities in the plant
-% portion of the augmented state vector.
-Cmodal = zeros(2*Nel,naug);
-Cmodal(1:Nel,1:Nel) = eye(Nel);
-Cmodal(Nel+(1:Nel),Nel+(1:Nel)) = eye(Nel);
-
-modalResponse = squeeze(freqresp( ...
-    ss(Aaug,Gaug,Cmodal,zeros(2*Nel,1)), 2*pi*frequency));
-modalPsd = 2*abs(modalResponse).^2;
-
-fig = figure('Name', 'Dryden modal-response PSD');
-apply_plot_style(fig, cfg);
-tiledlayout(1,2,'TileSpacing','compact','Padding','compact');
-
-nexttile;
-hold on;
-for k = 1:Nel
-    loglog(frequency, modalPsd(k,:), ...
-        'LineWidth', cfg_value(cfg,'plotLineWidth',1.5));
-end
-grid on; box on;
-xlim([0.1 100]);
-xlabel('Frequency [Hz]');
-ylabel('PSD of \xi_i [1/Hz]');
-legend(compose('\\xi_%d',1:Nel),'Location','northeast');
-
-nexttile;
-hold on;
-for k = 1:Nel
-    loglog(frequency, modalPsd(Nel+k,:), ...
-        'LineWidth', cfg_value(cfg,'plotLineWidth',1.5));
-end
-grid on; box on;
-xlim([0.1 100]);
-xlabel('Frequency [Hz]');
-ylabel('PSD of d\xi_i/dt [1/s^2/Hz]');
-legend(compose('d\\xi_%d/dt',1:Nel),'Location','northeast');
-
-apply_plot_style(fig, cfg);
-exportgraphics(fig, 'dryden_modal_psd.png', 'Resolution', 300);
-
-end
-
-% =========================================================================
-function plot_dryden_psd(cfg, time, wg, dryden)
-
-dt = time(2)-time(1);
-sampleFrequency = 1/dt;
-[estimatedPsd, frequency] = pwelch( ...
-    wg-mean(wg), [], [], [], sampleFrequency);
-
-response = squeeze(freqresp( ...
-    ss(dryden.A,dryden.B,dryden.C(1,:),0), 2*pi*frequency));
-theoreticalPsd = 2*abs(response).^2;
-theoreticalPsd = dryden.inputNoiseScale^2*theoreticalPsd;
-
-fig = figure('Name', 'Dryden gust PSD');
-apply_plot_style(fig, cfg);
-loglog(frequency(2:end), estimatedPsd(2:end), ...
-    'LineWidth', cfg_value(cfg,'plotLineWidth',1.5));
-hold on;
-loglog(frequency(2:end), theoreticalPsd(2:end), '--', ...
-    'LineWidth', cfg_value(cfg,'plotLineWidth',1.5));
-grid on; box on;
-xlabel('Frequency [Hz]');
-ylabel('PSD of w_g [(m/s)^2/Hz]');
-legend({'Estimated','Dryden model'},'Location','best');
-apply_plot_style(fig, cfg);
-exportgraphics(fig, 'dryden_gust_psd.png', 'Resolution', 300);
-
-end
-
-% =========================================================================
-function plot_dryden_wind_parameters( ...
-    cfg, h, referenceHeight, u20, z0, meanWindAtAltitude, Lw, sigmaW)
-
-maxAltitude = cfg_value(cfg, 'drydenWindProfileMaxAltitude', max(30,2*h));
-maxAltitude = max([maxAltitude, h, referenceHeight]);
-altitude = linspace(max(1.01*z0,0.05), maxAltitude, 500);
-meanWind = u20*log(altitude/z0)/log(referenceHeight/z0);
-verticalScaleLength = altitude/2;
-verticalTurbulenceRms = sigmaW*ones(size(altitude));
-
-fig = figure('Name', 'MIL-STD-1797A wind parameters');
-apply_plot_style(fig, cfg);
-tiledlayout(1,3,'TileSpacing','compact','Padding','compact');
-
-nexttile;
-plot(meanWind, altitude, 'LineWidth', cfg_value(cfg,'plotLineWidth',1.5));
-hold on;
-plot(meanWindAtAltitude, h, 'o', 'MarkerSize', 7, ...
-    'MarkerFaceColor', 'auto');
-grid on; box on;
-xlabel('u_w(h) [m/s]');
-ylabel('Altitude h [m]');
-legend({'Logarithmic profile','Operating point'}, ...
-    'Location','southeast', ...
-    'FontSize', max(8,cfg_value(cfg,'plotFontSize',13)-3));
-
-nexttile;
-plot(verticalScaleLength, altitude, ...
-    'LineWidth', cfg_value(cfg,'plotLineWidth',1.5));
-hold on;
-plot(Lw, h, 'o', 'MarkerSize', 7, 'MarkerFaceColor', 'auto');
-grid on; box on;
-xlabel('L_w=h/2 [m]');
-ylabel('Altitude h [m]');
-
-nexttile;
-plot(verticalTurbulenceRms, altitude, ...
-    'LineWidth', cfg_value(cfg,'plotLineWidth',1.5));
-hold on;
-plot(sigmaW, h, 'o', 'MarkerSize', 7, 'MarkerFaceColor', 'auto');
-grid on; box on;
-xlabel('\sigma_w=0.1u_{20} [m/s]');
-ylabel('Altitude h [m]');
-
-apply_plot_style(fig, cfg);
-exportgraphics(fig, 'dryden_wind_parameters.png', 'Resolution', 300);
 
 end
 
