@@ -10,40 +10,61 @@ results.inputs = inputs;
 results.models = models;
 results.eigTraj = eigTraj;
 results.plotModelName = plotModelName;
+
 [results.flutterSpeed, results.flutterFrequency] = ...
     report_flutter(cfg, models, 'Aae physical modes');
+
 results.responsePeaks = run_response_checks(cfg, inputs, models);
 
+
+%% ========================================================================
+% Gust analysis
+% ========================================================================
+
 if cfg.plotGustValidation
+
     switch lower(char(cfg.gustModel))
+
+        % ---------------------------------------------------------------
+        % One-minus-cosine gust
+        % ---------------------------------------------------------------
         case 'omcos'
-            results.gust = plot_gust_validation(cfg, inputs, models);
+
+            results.gust = plot_gust_validation( ...
+                cfg, inputs, models);
+
+
+        % ---------------------------------------------------------------
+        % Continuous Dryden gust
+        % ---------------------------------------------------------------
         case 'dryden'
-            [~,iV] = min(abs(cfg.airspeed-cfg.gustValidationSpeed));
-            if ~isempty(models{iV}.Bpw)
-                results.dryden = run_dryden_response(cfg, inputs, models);
-            elseif isfile(cfg.drydenQhgFile)
-                frequency = (cfg.drydenFrequencyStart: ...
-                    cfg.drydenFrequencyStep:cfg.drydenFrequencyEnd).';
-                results.drydenFrequency = compute_dryden_frequency_response( ...
-                    cfg,inputs,models,cfg.drydenQhgFile,frequency);
-            else
-                error(['Dryden analysis requires either gust columns in ', ...
-                    'APPROX.DAT or the generalized-force file "%s".'], ...
+
+            if ~isfile(cfg.drydenQhgFile)
+                error('Missing ZAERO generalized gust file: %s', ...
                     cfg.drydenQhgFile);
             end
-            if cfg.compareDrydenFrf && isfile(cfg.drydenFrfFile)
-                if ~isfield(results,'drydenFrequency')
-                    error(['The ZAERO FRF comparison currently requires ', ...
-                        'the MATLAB QHG-based frequency response.']);
-                end
-                results.drydenFrfComparison = compare_dryden_frf( ...
-                    results.drydenFrequency,cfg.drydenFrfFile);
-            end
+
+            results.drydenStateSpace = ...
+                build_dryden_state_space(cfg,models);
+
+            results.drydenFrequency = ...
+                compute_dryden_frequency_response( ...
+                    cfg, ...
+                    inputs, ...
+                    models);
+
+
+        % ---------------------------------------------------------------
+        % Invalid option
+        % ---------------------------------------------------------------
         otherwise
-            error('Unknown cfg.gustModel "%s". Use ''omcos'' or ''dryden''.', ...
+
+            error( ...
+                'Unknown cfg.gustModel "%s". Use ''omcos'' or ''dryden''.', ...
                 char(cfg.gustModel));
+
     end
+
 end
 
 end

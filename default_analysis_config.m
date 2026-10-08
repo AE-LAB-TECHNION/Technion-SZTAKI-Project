@@ -10,8 +10,8 @@ cfg.isgust = 0;      % fallback if gust count is not reported by ZAERO
 cfg.numControlSurfaces = 4; % fallback if control-surface count is not reported by ZAERO
 cfg.numGustInputs = []; % derived from ZAERO/RFA when gust columns exist
 
-cfg.RFA_filename = 'APPROX_DRYDEN.DAT';
-cfg.ZAERO_filename = 'ASE_ANALYSIS_DRYDEN.out';
+cfg.RFA_filename = 'APPROX_omcos.DAT';
+cfg.ZAERO_filename = 'ASE_ANALYSIS_omcos.out';
 cfg.f06file = 'model-0012.f06';
 cfg.sensorCacheFile = 'sensor_modal_matrices.mat';
 cfg.useSensorCache = true;
@@ -43,9 +43,9 @@ cfg.responseStrongestStrainCount = 5;
 
 % Gust validation against ZAERO MLDPRNT output
 cfg.plotGustValidation = true;
-cfg.gustModel = 'dryden';           % 'omcos' or 'dryden'
+cfg.gustModel = 'omcos';           % 'omcos' or 'dryden'
 cfg.gustValidationSpeed = 35;       % [m/s]
-cfg.gustResponseFile = 'GUSTXI.DAT';
+cfg.gustResponseFile = 'GUSTXI';
 cfg.gustLG = 1.0;                  % [s], DGUST OMCOSP LG
 cfg.gustWGV = 0.1;                 % DGUST OMCOSP WGV = w_g/V
 cfg.gustX0 = 0.0;                  % [m], DGUST gust reference point
@@ -53,25 +53,17 @@ cfg.gustXResponse = 0.0;           % [m], response location for gust delay
 cfg.gustLengthMode = 'time';       % DGUST LG is a time duration
 cfg.gustInternalDt = 0.001;        % [s], MATLAB integration step
 
-% MIL-STD-1797A low-altitude Dryden turbulence conditions.
-cfg.drydenAltitude = 1.5;             % [m] above local terrain
-cfg.drydenMeanWindAt20ft = 7.0;     % [m/s], selected u_20 from Figure 263
-cfg.drydenReferenceHeight = 20*0.3048; % [m], 20 ft
-cfg.drydenRoughnessLength = 0.15*0.3048; % [m], Category C z_0 = 0.15 ft
-cfg.drydenScaleLength = [];         % [m], empty uses altitude/2
-cfg.drydenSigmaW = [];              % [m/s], empty uses sigma_w = 0.1*u_20
-cfg.drydenTau = 0.002;              % [s], added high-frequency LPF
-cfg.drydenTime = 0:0.001:60;        % [s]
-cfg.drydenRandomSeed = 1;
-cfg.drydenWindProfileMaxAltitude = 30; % [m], wind-parameter plot limit
-cfg.drydenQhgFile = 'QHG.DAT';        % ZAERO generalized gust forces
-cfg.drydenFrfFile = 'DRYFRF';         % ASEOUT file read by frfrd.m
-cfg.drydenFrequencyStart = 0;         % [Hz]
-cfg.drydenFrequencyStep = 0.01;       % [Hz]
-cfg.drydenFrequencyEnd = 100;         % [Hz]
-cfg.compareDrydenFrf = true;
+% Continuous Dryden comparison against ZAERO.
+% Lg, GURMS, V and the frequency grid are read from the ZAERO output.
+cfg.drydenQhgFile = 'QHG.DAT';          % generalized gust forces from ZAERO
+cfg.drydenZaeroOutputFile = 'ASE_ANALYSIS_DRYDEN.out';
 cfg.compareDrydenZaero = true;
-cfg.drydenZaeroResponseFile = 'DRY.PLT';
+cfg.drydenZaeroPsdFile = 'DRYPSD.P';       % explicit CROSPSD auto-PSD output
+cfg.drydenTau = 1e-4;                    % [s], LPF on gust-rate output only
+cfg.drydenPsdDuration = 60;              % [s], stationary PSD realization
+cfg.drydenPsdTimeStep = 1e-3;            % [s]
+cfg.drydenWelchWindowLength = 8192;      % samples
+cfg.drydenRandomSeed = 1;                % reproducible displayed realization
 
 % Plotting settings
 

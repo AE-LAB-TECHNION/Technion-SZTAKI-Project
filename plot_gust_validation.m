@@ -48,26 +48,15 @@ tCode = make_fine_time(tCompare(1), tCompare(end), internalDt);
 [ugustCode, gust] = build_omcosp_input(cfg, tCode, model.V, size(model.Baw, 2));
 
 % -------------------------------------------------------------------------
-% Build modal output system: y = [xi ; xidot]
+% Simulate MATLAB response with a high-accuracy ODE solver
 % -------------------------------------------------------------------------
-nStates = size(model.Aae, 1);
-
-Cmodal = zeros(2*Nel, nStates);
-Cmodal(1:Nel, 1:Nel) = eye(Nel);                 % xi
-Cmodal(Nel+(1:Nel), Nel+(1:Nel)) = eye(Nel);     % xidot
-
-Dmodal = zeros(2*Nel, size(model.Baw, 2));
-
-sys = ss(model.Aae, model.Baw, Cmodal, Dmodal);
-
-% -------------------------------------------------------------------------
-% Simulate MATLAB response on fine time grid
-% -------------------------------------------------------------------------
-yCode = lsim(sys, ugustCode, tCode);
+solverComparison = compare_omcos_solvers( ...
+    cfg, model, tCode, ugustCode, tCompare, zaero);
+simulation = solverComparison.expm;
 
 code.time = tCode;
-code.modalX = yCode(:, 1:Nel);
-code.modalV = yCode(:, Nel+(1:Nel));
+code.modalX = simulation.modalX;
+code.modalV = simulation.modalV;
 
 % Sample MATLAB response at ZAERO output times
 codeCompare.time = tCompare;
@@ -102,6 +91,7 @@ result.rms.modalV = sqrt(mean(errV.^2, 1));
 
 result.peakAbs.modalX = max(abs(errX), [], 1);
 result.peakAbs.modalV = max(abs(errV), [], 1);
+result.solverComparison = solverComparison;
 
 % -------------------------------------------------------------------------
 % Print summary

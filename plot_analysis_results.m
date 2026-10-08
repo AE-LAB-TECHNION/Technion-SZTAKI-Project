@@ -1,4 +1,4 @@
-function plot_analysis_results(cfg, results)
+function results = plot_analysis_results(cfg, results)
 %PLOT_ANALYSIS_RESULTS Create figures for enabled analyses.
 
 if ~cfg.output.showFigures
@@ -14,18 +14,32 @@ end
 if cfg.plotBode
     plot_control_bodes(cfg, results.models);
 end
-if isfield(results, 'dryden')
-    plot_dryden_results(cfg, results.dryden);
-    if cfg.compareDrydenZaero && isfile(cfg.drydenZaeroResponseFile)
-        plot_dryden_zaero_comparison( ...
-            cfg,results.dryden,cfg.drydenZaeroResponseFile);
-    end
-end
 if isfield(results, 'drydenFrequency')
+    if strcmpi(cfg.gustModel,'dryden')
+        zaeroDrydenOutput = cfg.ZAERO_filename;
+        if isfield(cfg,'drydenZaeroOutputFile') && ...
+                ~isempty(cfg.drydenZaeroOutputFile)
+            zaeroDrydenOutput = cfg.drydenZaeroOutputFile;
+        end
+
+        if isfield(results,'drydenStateSpace')
+            results.drydenGustPsdComparison = ...
+                plot_dryden_gust_psd_comparison( ...
+                    cfg,results.drydenStateSpace,zaeroDrydenOutput);
+        end
+    end
+
     plot_dryden_frequency_psd(cfg,results.drydenFrequency);
-end
-if isfield(results, 'drydenFrfComparison')
-    plot_dryden_frf_comparison(cfg,results.drydenFrfComparison);
+
+    if strcmpi(cfg.gustModel,'dryden') && cfg.compareDrydenZaero
+        if ~isfile(cfg.drydenZaeroPsdFile)
+            warning('ZAERO Dryden PSD file not found: %s', ...
+                cfg.drydenZaeroPsdFile);
+        else
+            results.drydenPsdComparison = plot_dryden_zaero_comparison( ...
+                cfg,results.drydenFrequency);
+        end
+    end
 end
 
 end

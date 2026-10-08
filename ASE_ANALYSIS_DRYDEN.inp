@@ -7,10 +7,10 @@ CEND
 TITLE = ASSURE_WING
 ECHO = SORT
 SUBCASE = 1
-        SUBTITLE= ASE FLUTTER ANALYSIS, M=0.0, SEA LEVEL
+        SUBTITLE= ASE FLUTTER ANALYSIS M=0.0 SEA LEVEL
         ASE = 100
 SUBCASE = 2
-        SUBTITLE= FREQUENCY DOMAIN FLUTTER ANALYSIS, M=0.0, SEA LEVEL
+        SUBTITLE= FREQUENCY DOMAIN FLUTTER ANALYSIS M=0.0 SEA LEVEL
         FLUTTER = 100
 SUBCASE = 3
         SUBTITLE = CONTINUOUS DRYDEN GUST ANALYSIS
@@ -28,7 +28,9 @@ AEROZ           YES     NO      KG      M       0.1     0.612   0.1224  +AZ1
 $------------------------------------------------------------------------------$
 $                   AERODYNAMIC AIC MATRIX GENERATION
 $------------------------------------------------------------------------------$
-MKAEROZ 100     0.1028530       0       SAVE    AE_SYM.0                +MK1
+$--1---><--2---><--3---><--4---><--5---><--6---><--7---><--8---><--9---><--10-->
+$       IDMK    MACH    METHOD  IDFLT   SAVE    <---FILENAME--->PRINT          $
+MKAEROZ 100     0.1028530       0       ACQU    AE_SYM.0                +MK1
 +MK1    0.01    0.02    0.03    0.04    0.05    0.06    0.07    0.1     +MK2
 +MK2    0.12    0.125   0.13    0.14    0.15    0.2     0.25    0.3     +MK3
 +MK3    0.4     0.5     0.6     0.7     0.8     0.9     1.0     1.5
@@ -150,7 +152,7 @@ SURFSET 350     CF1     CF2     CF3     CF4
 $------------------------------------------------------------------------------$
 $                                 ASE
 $------------------------------------------------------------------------------$
-ASE,100,250,100,,170
+ASE     100     250     100             170
 ASECONT 250     350     900
 SENSET  900     901     902     903
 
@@ -181,27 +183,32 @@ $------------------------------------------------------------------------------$
 $                   GLOADS ANALYSIS: CONTINUOUS DRYDEN GUST
 $------------------------------------------------------------------------------$
 
-GENGUST,100,100,SYM,1,90.0,0.0,0.0,0,+GG1
-+GG1,0.0
+GENGUST 100     100     SYM     1       90.0    0.0     0.0     0       +GG1
++GG1    0.0
 
-$ Continuous Dryden analysis: RAAID=0 explicitly selects frequency domain.
-$ TIME remains blank because this is a continuous statistical gust analysis.
-GLOADS,200,250,100,-170,,10,,100,+GL
-+GL,SAVE,FORMAT,QHG.DAT
+GLOADS  200     250     100     0               10              100     +GL
++GL     SAVE    FORMAT  QHG.DAT
 
-$ LG=0.75 m, VINV=1/35 s/m, FMAX=100 Hz, GURMS=0.7 m/s.
-$ Negative DF activates the FFT option.
-CGUST,10,DRYP,0.75,0.028571,0.0,100.0,-0.01,0.7
+$       SID     TYPE    LG      VINV    X0      FMAX    DF      GURMS
+CGUST   10      DRYP    0.75    0.0285710.0     100.0   -0.01   0.7
 
-$ PSD of modal displacements and velocities from 0 to 100 Hz.
-$ The empty fourth field is intentional and was used by the successful run.
-MLDPRNT,100,DRY.PLT,,TABLE,PSD,0.0,100.0,NO,+MP1
-+MP1,MODALX,1,MODALX,2,MODALX,3,MODALV,1,+MP2
-+MP2,MODALV,2,MODALV,3
+MLDPRNT 100     DRY.PLT         TABLE   PSD     0.0     100.0   NO      +MP1
++MP1    MODALX  1       MODALX  2       MODALX  3       MODALV  1       +MP2
++MP2    MODALV  2       MODALV  3
 
-$ Frequency grid for ASEOUT frequency-response data read by frfrd.m.
-FREQ1,300,0.01,0.01,10000
-$------------------------------------------------------------------------------$$------------------------------------------------------------------------------$
+CROSPSD 101     MODALX  1               1
+CROSPSD 102     MODALX  2               2
+CROSPSD 103     MODALX  3               3
+CROSPSD 104     MODALV  1               1
+CROSPSD 105     MODALV  2               2
+CROSPSD 106     MODALV  3               3
+
+MLDPRNT 100     DRYPSD.P        TABLE   PSD     0.0     100.0   NO      +PS1
++PS1    CROSPSD 101     CROSPSD 102     CROSPSD 103     CROSPSD 104     +PS2
++PS2    CROSPSD 105     CROSPSD 106
+
+FREQ1   300     0.0     0.01    10000
+$------------------------------------------------------------------------------$
 $              Definition of Concentrated Mass Elements
 $------------------------------------------------------------------------------$
 $CONMLST 100                                                             +BC
@@ -227,10 +234,10 @@ $ASEOUT  1007    200     1       PLANT           gust23.0
 $ASEOUT  1002    100     1       PLANT           ./Plants/P20MS.0
 $ASEOUT   1001   100     1        AEMODEL         gust25.0
 $ASEOUT   1002   100     2        AEMODEL         gust30.0
-ASEOUT,1003,100,1,AEMODEL,,GUST35,FORMAT
+$ASEOUT 1003    100     1       AEMODEL         GUST35  FORMAT
 $ Frequency-domain gust FRF from GLOADS ID=200 at its first flight condition.
-$ GLOADS uses only its first flight condition, so INDEX=1.
-ASEOUT,20,200,1,PLANT,300,DRYFRF,FORMAT
+$ GLOADS uses only its first flight condition so INDEX=1.
+ASEOUT  20      200     1       PLANT   300     DRYFRF  FORMAT
 $ASEOUT   1004   100     4        AEMODEL         gust37.0
 $ASEOUT   1005   100     5        AEMODEL         gust39.0
 $ASEOUT   1006   100     6        AEMODEL         gust40.0
@@ -239,16 +246,17 @@ $ASEOUT   1008   100     8        AEMODEL         gust50.0
 $------------------------------------------------------------------------------$
 $                            RFA Output Files
 $------------------------------------------------------------------------------$
-PLTMIST 10001   100     1       4                       MNSTSi1j1.txt
-PLTMIST 10002   100     1       5                       MNSTSi1j2.txt
-PLTMIST 10003   100     1       6                       MNSTSi1j3.txt
+$--1---><--2---><--3---><--4---><--5---><--6---><--7---><--8---><--9---><--10-->
+PLTMIST  10001   100     1       1                      MNSTSi1j1.txt
+PLTMIST  10002   100     1       2                      MNSTSi1j2.txt
+PLTMIST  10003   100     1       3                      MNSTSi1j3.txt
 
-PLTMIST 10009   100     2       4                       MNSTSi2j1.txt
-PLTMIST 10010   100     2       5                       MNSTSi2j2.txt
-PLTMIST 10011   100     2       6                       MNSTSi2j3.txt
+PLTMIST  10009   100     2       1                      MNSTSi2j1.txt
+PLTMIST  10010   100     2       2                      MNSTSi2j2.txt
+PLTMIST  10011   100     2       3                      MNSTSi2j3.txt
 
-PLTMIST 10017   100     3       4                       MNSTSi3j1.txt
-PLTMIST 10018   100     3       5                       MNSTSi3j2.txt
-PLTMIST 10019   100     3       6                       MNSTSi3j3.txt
+PLTMIST  10017   100     3       1                      MNSTSi3j1.txt
+PLTMIST  10018   100     3       2                      MNSTSi3j2.txt
+PLTMIST  10019   100     3       3                      MNSTSi3j3.txt
 $------------------------------------------------------------------------------$
 ENDDATA

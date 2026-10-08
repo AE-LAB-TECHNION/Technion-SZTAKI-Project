@@ -189,7 +189,7 @@ GLOADS  200     250     100     -170            10      10      100     +GL
 
 MLDTIME 10      0.0     20.0    0.001   1       0
 
-MLDPRNT 100     GUSTXI.DAT      TABLE   TIME                    YES      +MLDP3
+MLDPRNT 100     GUSTXI          TABLE   TIME                    YES      +MLDP3
 +MLDP3  MODALX  1       MODALX  2       MODALX  3                        +MLDP4
 +MLDP4  MODALV  1       MODALV  2       MODALV  3
 
