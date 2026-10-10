@@ -14,8 +14,8 @@ cfg.isgust = 0;      % fallback if gust count is not reported by ZAERO
 cfg.numControlSurfaces = 4; % fallback if control-surface count is not reported by ZAERO
 cfg.numGustInputs = []; % derived from ZAERO/RFA when gust columns exist
 
-cfg.RFA_filename = fullfile(modelData,'APPROX_OMCOS.DAT');
-cfg.ZAERO_filename = fullfile(modelData,'ASE_ANALYSIS_OMCOS_RBM.out');
+cfg.RFA_filename = fullfile(modelData,'APPROX.DAT');
+cfg.ZAERO_filename = fullfile(modelData,'ASE_ANALYSIS.OUT');
 cfg.f06file = fullfile(modelData,'model-0012.f06');
 cfg.sensorCacheFile = fullfile(modelData,'sensor_modal_matrices.mat');
 cfg.useSensorCache = true;
