@@ -1,62 +1,77 @@
-# Repository Summary - 2026-05-26
+# Aeroelastic RFA model with Dryden gust input
 
-This repository is a compact MATLAB aeroelastic and flutter analysis workflow built around ZAERO and F06 output files.
+This repository builds a MATLAB aeroelastic plant from a ZAERO rational
+function approximation (RFA). The plant includes actuator dynamics,
+strain, displacement/acceleration, rate and RBM measurements, and a
+three-state Dryden shaping filter.
 
-## Running The Analysis
+The current model uses 20 structural aerodynamic lag states and 20 gust
+aerodynamic lag states. With the 6 structural states, 12 actuator states
+and 3 Dryden states, the augmented model contains 61 states.
 
-`main.m` keeps configuration, calculation, plotting, and file output as
-separate steps:
+## Run
+
+Open MATLAB in the repository root and run:
 
 ```matlab
-cfg = default_analysis_config();
-results = run_analysis(cfg);
-plot_analysis_results(cfg, results);
-save_analysis_figures(cfg);
+main
 ```
 
-Figures are shown by default and are not saved. To save all generated
-figures as PNG files under `output/figures`, set:
+`main.m` adds the source folders to the MATLAB path, builds the model,
+runs the selected analyses and displays the requested figures.
+
+The workflow requires MATLAB with Control System Toolbox and Signal
+Processing Toolbox.
+
+## Repository structure
+
+- `src/input` reads the RFA, modal and sensor data.
+- `src/model` builds the aeroelastic, actuator and Dryden-augmented models.
+- `src/gust` defines the MATLAB Dryden model and its frequency response.
+- `src/responses` contains selectable Bode and step-response figures.
+- `src/analysis` contains model checks and flutter reporting.
+- `src/plotting` contains general plotting and figure-export functions.
+- `data/model` contains the files required to build the MATLAB model.
+- `zaero_model_comparison` contains optional MATLAB--ZAERO validation.
+
+The files required for the standard MATLAB run are stored in `data/model`:
+
+- the 20-lag OMCOS RFA file;
+- the matching ZAERO modal output;
+- the RBM state-space output;
+- the F06 structural data and its sensor-matrix cache.
+
+## Response figures
+
+Select the required input-output plots in `default_analysis_config.m`:
+
+```matlab
+cfg.responsePlots.modalBode = false;
+cfg.responsePlots.rbmBode = true;
+cfg.responsePlots.stepRate = false;
+cfg.responsePlots.stepDisp = false;
+cfg.responsePlots.stepStrain = false;
+cfg.responsePlots.stepRbm = false;
+```
+
+## Figures
+
+Generated images are not stored in the repository. To save the figures
+created by `main`, set:
 
 ```matlab
 cfg.output.saveFigures = true;
 ```
 
-## Main Workflow
+The files will be written to `output/figures`.
 
-The main entry point is `main.m`. It:
+## ZAERO comparison
 
-1. Builds the analysis configuration with `default_analysis_config.m`.
-2. Loads and derives analysis inputs with `load_analysis_inputs.m`.
-3. Sweeps airspeed with `run_airspeed_sweep.m`.
-4. Plots root-locus and omega-V-g results.
-5. Reports the estimated flutter point.
-6. Generates control Bode plots.
+The Dryden filter used by the augmented MATLAB model is defined entirely
+from the parameters in `default_analysis_config.m`. ZAERO Dryden result
+files are used only as validation references. See
+`zaero_model_comparison/README.md` for the comparison workflow.
 
-The model type is AE/PLANT. 
-
-
-## Core Numerical Path
-
-- `extractRFAmatrices.m` reads ZAERO RFA matrices from `APPROX.DAT`.
-- `read_zaero_modal_info.m` parses modal metadata from `ASE_ANALYSIS.out`, including retained/omitted modes, control-surface count, gust information, and eigenvalues.
-- `extract_PSI_PHI_PHIROT_from_F06.m` extracts displacement, acceleration, rotation, and strain-related modal matrices from `model-0012.f06`.
-- `buildAESS_state.m` builds the aeroelastic state-space matrices: `Aae`, `Bae`, `Baw`, `Cae`, `Caw`, and `Dae`.
-- `buildPlant_from_AESS.m` augments the aeroelastic model with third-order actuator dynamics to form the plant model.
-
-## Analysis And Plotting Layer
-
-- `plot_root_locus.m` plots eigenvalue trajectories over airspeed.
-- `omega_v_g_data.m` tracks physical modal branches and computes modal frequency and damping.
-- `plot_omega_v_g.m` creates omega-V-g plots.
-- `find_flutter.m` and `report_flutter.m` estimate and print flutter speed and flutter frequency.
-- `plot_control_bodes.m` plots control-surface or actuator-command Bode responses.
-- `apply_plot_style.m` applies shared per-figure plotting style.
-
-## Important Data Files
-
-- `APPROX.DAT`: RFA matrix data.
-- `ASE_ANALYSIS.out`: current ZAERO output used as the modal metadata source.
-- `ASE_ANALYSIS_new.out`: older or alternate ZAERO output.
-- `model-0012.f06`: large F06 modal/source data file.
-- `sensor_modal_matrices.mat`: cached sensor/modal matrices.
-
+Select `cfg.gustModel = 'dryden'` or `'omcos'` in
+`default_analysis_config.m`. ZAERO comparison figures can be disabled
+without changing the MATLAB model.

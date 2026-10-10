@@ -1,5 +1,12 @@
 *.asv
-*.out
-*.DAT
-*.dat
-*.f06
+
+# Generated figures and MATLAB output
+output/
+figures/
+*.fig
+*.png
+*.jpg
+*.jpeg
+
+# Temporary diagnostics
+*_debug.mat

@@ -1,6 +1,10 @@
 function cfg = default_analysis_config()
 %DEFAULT_ANALYSIS_CONFIG Central settings for the aeroelastic analysis.
 
+projectRoot = fileparts(mfilename('fullpath'));
+modelData = fullfile(projectRoot,'data','model');
+zaeroComparison = fullfile(projectRoot,'zaero_model_comparison');
+
 cfg.rho = 1.225;
 cfg.L = 0.05;        % length scale [m], usually half-chord
 cfg.zeta = 0;        % modal damping ratio
@@ -10,12 +14,14 @@ cfg.isgust = 0;      % fallback if gust count is not reported by ZAERO
 cfg.numControlSurfaces = 4; % fallback if control-surface count is not reported by ZAERO
 cfg.numGustInputs = []; % derived from ZAERO/RFA when gust columns exist
 
-cfg.RFA_filename = 'APPROX_omcos.DAT';
-cfg.ZAERO_filename = 'ASE_ANALYSIS_omcos.out';
-cfg.f06file = 'model-0012.f06';
-cfg.sensorCacheFile = 'sensor_modal_matrices.mat';
+cfg.RFA_filename = fullfile(modelData,'APPROX_OMCOS.DAT');
+cfg.ZAERO_filename = fullfile(modelData,'ASE_ANALYSIS_OMCOS_RBM.out');
+cfg.f06file = fullfile(modelData,'model-0012.f06');
+cfg.sensorCacheFile = fullfile(modelData,'sensor_modal_matrices.mat');
 cfg.useSensorCache = true;
 cfg.rebuildSensorCache = false;
+cfg.rbmModelFile = fullfile(modelData,'AERBM.S');
+cfg.rbmOutputRow = 4;
 
 cfg.method = 'MS';   % 'MS' or 'Rg'
 
@@ -25,17 +31,23 @@ cfg.sensor = default_sensor_config();
 cfg.airspeed = 25:0.25:50;
 
 
-cfg.plotBode = false;
+% System input-output response figures
+cfg.responsePlots.modalBode = false;
+cfg.responsePlots.rbmBode = true;
+cfg.responsePlots.stepRate = false;
+cfg.responsePlots.stepDisp = false;
+cfg.responsePlots.stepStrain = false;
+cfg.responsePlots.stepRbm = false;
+
 cfg.bodeSpeed = 35;  % [m/s]
 cfg.bodeFrequency = logspace(-1, 3, 500); % [rad/s]
 
 % Diagnostic strain-mode plots. Requires cfg.datFile to exist.
 cfg.plotStrainModes = false;
 cfg.normalizeStrainModes = false;
-cfg.datFile = 'model-0012.dat';
+cfg.datFile = fullfile(modelData,'MODEL-0012.dat');
 
-% Time-domain response checks
-cfg.plotStepResponse = false;
+% Time-domain response settings
 cfg.responseCheckSpeed = 35;       % [m/s]
 cfg.responseStepTime = 0:0.001:2;  % [s]
 cfg.responseStepCommandDeg = 1;    % [deg]
@@ -43,9 +55,10 @@ cfg.responseStrongestStrainCount = 5;
 
 % Gust validation against ZAERO MLDPRNT output
 cfg.plotGustValidation = true;
-cfg.gustModel = 'omcos';           % 'omcos' or 'dryden'
+cfg.gustModel = 'dryden';           % 'omcos' or 'dryden'
 cfg.gustValidationSpeed = 35;       % [m/s]
-cfg.gustResponseFile = 'GUSTXI';
+cfg.gustResponseFile = fullfile( ...
+    zaeroComparison,'omcos','GUSTXI');
 cfg.gustLG = 1.0;                  % [s], DGUST OMCOSP LG
 cfg.gustWGV = 0.1;                 % DGUST OMCOSP WGV = w_g/V
 cfg.gustX0 = 0.0;                  % [m], DGUST gust reference point
@@ -54,11 +67,18 @@ cfg.gustLengthMode = 'time';       % DGUST LG is a time duration
 cfg.gustInternalDt = 0.001;        % [s], MATLAB integration step
 
 % Continuous Dryden comparison against ZAERO.
-% Lg, GURMS, V and the frequency grid are read from the ZAERO output.
-cfg.drydenQhgFile = 'QHG.DAT';          % generalized gust forces from ZAERO
-cfg.drydenZaeroOutputFile = 'ASE_ANALYSIS_DRYDEN.out';
+% The model parameters are explicit; ZAERO files are used only for validation.
+cfg.drydenVelocity = 35;                 % [m/s]
+cfg.drydenScaleLength = 0.75;            % Lg [m]
+cfg.drydenSigmaW = 0.7;                  % GURMS [m/s]
+cfg.drydenFrequencyStart = 0;             % [Hz]
+cfg.drydenFrequencyStep = 0.01;           % [Hz]
+cfg.drydenFrequencyEnd = 100;             % [Hz]
+cfg.drydenZaeroOutputFile = fullfile( ...
+    zaeroComparison,'dryden','ASE_ANALYSIS_DRY_RBM.out');
 cfg.compareDrydenZaero = true;
-cfg.drydenZaeroPsdFile = 'DRYPSD.P';       % explicit CROSPSD auto-PSD output
+cfg.drydenZaeroPsdFile = fullfile( ...
+    zaeroComparison,'dryden','DRYPSD.P');
 cfg.drydenTau = 1e-4;                    % [s], LPF on gust-rate output only
 cfg.drydenPsdDuration = 60;              % [s], stationary PSD realization
 cfg.drydenPsdTimeStep = 1e-3;            % [s]
@@ -89,15 +109,13 @@ cfg.plotTickLabelInterpreter = cfg.plotTextInterpreter;
 % Analysis selection and output behavior.
 cfg.analysis.rootLocus = true;
 cfg.analysis.omegaVG = cfg.plotOmegaVG;
-cfg.analysis.stepResponse = cfg.plotStepResponse;
 cfg.analysis.strainModes = cfg.plotStrainModes;
-cfg.analysis.bode = cfg.plotBode;
 cfg.analysis.gust = cfg.plotGustValidation;
 cfg.analysis.gustModel = cfg.gustModel;
 
 cfg.output.showFigures = true;
 cfg.output.saveFigures = false;
-cfg.output.figureDirectory = fullfile('output', 'figures');
+cfg.output.figureDirectory = fullfile(projectRoot,'output','figures');
 cfg.output.figureResolution = 300;
 
 end
