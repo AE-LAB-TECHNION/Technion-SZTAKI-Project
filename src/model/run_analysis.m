@@ -62,7 +62,4 @@ if cfg.plotGustValidation
 
 end
 
-results.rbmValidation = validate_rbm_measurement( ...
-    inputs,models,drydenStateSpace);
-
 end
