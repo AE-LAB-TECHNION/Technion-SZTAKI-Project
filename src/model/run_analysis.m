@@ -14,19 +14,16 @@ results.plotModelName = plotModelName;
 [results.flutterSpeed, results.flutterFrequency] = ...
     report_flutter(cfg, models, 'Aae physical modes');
 
-drydenStateSpace = [];
-
 % Build the control model independently of ZAERO validation files.
 if strcmpi(cfg.gustModel,'dryden')
     results.drydenStateSpace = build_dryden_state_space(cfg,models);
-    drydenStateSpace = results.drydenStateSpace;
 end
 
 %% ========================================================================
 % Gust validation
 % ========================================================================
 
-if cfg.plotGustValidation
+if cfg.analysis.gust
 
     switch lower(char(cfg.gustModel))
 
@@ -35,8 +32,7 @@ if cfg.plotGustValidation
         % ---------------------------------------------------------------
         case 'omcos'
 
-            results.gust = plot_gust_validation( ...
-                cfg, inputs, models);
+            results.gust = plot_gust_validation(cfg,models);
 
 
         % ---------------------------------------------------------------

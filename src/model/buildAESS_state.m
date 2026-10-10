@@ -87,14 +87,6 @@ K = diag(eigvals(:));
 Cstruct = 2*zeta*diag(Omega);
 M = eye(Nel);
 
-% Initialize outputs
-Aae = [];
-Bae = [];
-Baw = [];
-Cae = [];
-Caw = [];
-Dae = [];
-
 % -------------------------------------------------------------------------
 % Case 1: no gust, no control input
 % -------------------------------------------------------------------------
@@ -112,10 +104,8 @@ if isgust==0 && includeControlInputs==0
     Cbar = Cstruct - qdyn*(L/V)*A1h;
     Mbar = M       - qdyn*(L/V)^2*A2h;
 
-    invMbar = inv(Mbar);
-
     Aae = [ zeros(Nel)        eye(Nel)          zeros(Nel,Nxae); ...
-           -invMbar*Kbar     -invMbar*Cbar      qdyn*invMbar*Dlag; ...
+           -(Mbar\Kbar)      -(Mbar\Cbar)       qdyn*(Mbar\Dlag); ...
             zeros(Nxae,Nel)   Eh                (V/L)*Rlag ];
 
     Bae = zeros(size(Aae,1),0);
@@ -136,7 +126,6 @@ elseif isgust==0 && includeControlInputs==1
 
     A0c = RFA_mat.A0(mode_idx, ctrl_idx);
     A1c = RFA_mat.A1(mode_idx, ctrl_idx);
-    A2c = RFA_mat.A2(mode_idx, ctrl_idx); %#ok<NASGU>
     Ec  = RFA_mat.E(Xae_idx, ctrl_idx);
 
     Dlag = RFA_mat.D(mode_idx, Xae_idx);
@@ -147,10 +136,8 @@ elseif isgust==0 && includeControlInputs==1
     Cbar = Cstruct - qdyn*(L/V)*A1h;
     Mbar = M       - qdyn*(L/V)^2*A2h;
 
-    invMbar = inv(Mbar);
-
     Aae = [ zeros(Nel)        eye(Nel)          zeros(Nel,Nxae); ...
-           -invMbar*Kbar     -invMbar*Cbar      qdyn*invMbar*Dlag; ...
+           -(Mbar\Kbar)      -(Mbar\Cbar)       qdyn*(Mbar\Dlag); ...
             zeros(Nxae,Nel)   Eh                (V/L)*Rlag ];
 
     % u_ae = [delta; delta_dot; delta_ddot]
@@ -161,7 +148,7 @@ elseif isgust==0 && includeControlInputs==1
     % Xa_dot receives:
     %   0*delta + Ec*delta_dot + 0*delta_ddot
     Bae = [ zeros(Nel, Nctrl),              zeros(Nel, Nctrl),                 zeros(Nel, Nctrl); ...
-            qdyn*invMbar*A0c,               qdyn*(L/V)*invMbar*A1c,            zeros(Nel, Nctrl); ...
+            qdyn*(Mbar\A0c),                qdyn*(L/V)*(Mbar\A1c),             zeros(Nel, Nctrl); ...
             zeros(Nxae, Nctrl),             Ec,                                zeros(Nxae, Nctrl) ];
 
     Baw = zeros(size(Aae,1),0);
@@ -190,17 +177,15 @@ elseif isgust==1 && includeControlInputs==0
     Cbar = Cstruct - qdyn*(L/V)*A1h;
     Mbar = M       - qdyn*(L/V)^2*A2h;
 
-    invMbar = inv(Mbar);
-
     Aae = [ zeros(Nel)        eye(Nel)          zeros(Nel,Nxae); ...
-           -invMbar*Kbar     -invMbar*Cbar      qdyn*invMbar*Dlag; ...
+           -(Mbar\Kbar)      -(Mbar\Cbar)       qdyn*(Mbar\Dlag); ...
             zeros(Nxae,Nel)   Eh                (V/L)*Rlag ];
 
     Bae = zeros(size(Aae,1),0);
 
     % wbar = [w_g/V for each gust vector; wdot_g/V for each gust vector]
     Baw = [ zeros(Nel, Ngust),            zeros(Nel, Ngust); ...
-            qdyn*invMbar*A0g,             qdyn*(L/V)*invMbar*A1g; ...
+            qdyn*(Mbar\A0g),              qdyn*(L/V)*(Mbar\A1g); ...
             zeros(Nxae, Ngust),           Eg ];
 
 % -------------------------------------------------------------------------
@@ -220,8 +205,6 @@ elseif isgust==1 && includeControlInputs==1
 
     A0c = RFA_mat.A0(mode_idx, ctrl_idx);
     A1c = RFA_mat.A1(mode_idx, ctrl_idx);
-    A2c = RFA_mat.A2(mode_idx, ctrl_idx); %#ok<NASGU>
-
     A0g = RFA_mat.A0(mode_idx, gust_idx);
     A1g = RFA_mat.A1(mode_idx, gust_idx);
 
@@ -236,20 +219,18 @@ elseif isgust==1 && includeControlInputs==1
     Cbar = Cstruct - qdyn*(L/V)*A1h;
     Mbar = M       - qdyn*(L/V)^2*A2h;
 
-    invMbar = inv(Mbar);
-
     Aae = [ zeros(Nel)        eye(Nel)          zeros(Nel,Nxae); ...
-           -invMbar*Kbar     -invMbar*Cbar      qdyn*invMbar*Dlag; ...
+           -(Mbar\Kbar)      -(Mbar\Cbar)       qdyn*(Mbar\Dlag); ...
             zeros(Nxae,Nel)   Eh                (V/L)*Rlag ];
 
     % u_ae = [delta; delta_dot; delta_ddot]
     Bae = [ zeros(Nel, Nctrl),              zeros(Nel, Nctrl),                 zeros(Nel, Nctrl); ...
-            qdyn*invMbar*A0c,               qdyn*(L/V)*invMbar*A1c,            zeros(Nel, Nctrl); ...
+            qdyn*(Mbar\A0c),                qdyn*(L/V)*(Mbar\A1c),             zeros(Nel, Nctrl); ...
             zeros(Nxae, Nctrl),             Ec,                                zeros(Nxae, Nctrl) ];
 
     % wbar = [w_g/V for each gust vector; wdot_g/V for each gust vector]
     Baw = [ zeros(Nel, Ngust),            zeros(Nel, Ngust); ...
-            qdyn*invMbar*A0g,             qdyn*(L/V)*invMbar*A1g; ...
+            qdyn*(Mbar\A0g),              qdyn*(L/V)*(Mbar\A1g); ...
             zeros(Nxae, Ngust),           Eg ];
 
 else
@@ -261,7 +242,7 @@ end
 % -------------------------------------------------------------------------
 [Cae, Caw, Dae] = build_output_matrices( ...
     PSI, PHI, PHI_ROT, RBM, ...
-    Nel, Nxae, invMbar, Kbar, Cbar, Dlag, qdyn, ...
+    Nel, Nxae, Aae, ...
     Bae, Baw);
 
 end
@@ -269,7 +250,7 @@ end
 % =========================================================================
 function [Cae, Caw, Dae] = build_output_matrices( ...
     PSI, PHI, PHI_ROT, RBM, ...
-    Nel, Nxae, invMbar, Kbar, Cbar, Dlag, qdyn, ...
+    Nel, Nxae, Aae, ...
     Bae, Baw)
 
 nStrain = size(PSI,1);
@@ -286,14 +267,9 @@ C_strain = [ ...
 
 % acceleration = PHI * xi_ddot
 %
-% xi_ddot =
-%   -invMbar*Kbar*xi
-%   -invMbar*Cbar*xi_dot
-%   + qdyn*invMbar*Dlag*Xa
-C_acc = [ ...
-   -PHI*invMbar*Kbar, ...
-   -PHI*invMbar*Cbar, ...
-    qdyn*PHI*invMbar*Dlag ];
+% The structural-acceleration rows of Aae contain the complete mapping
+% from aeroelastic states to xi_ddot.
+C_acc = PHI*Aae(Nel+1:2*Nel,:);
 
 % angular_rate = PHI_ROT * xi_dot
 C_rate = [ ...

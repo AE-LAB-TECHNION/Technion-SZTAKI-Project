@@ -12,7 +12,7 @@ end
 [V,rho,nx,nu,ny,~,~,~,C,D] = sysrd(filename);
 
 if outputRow < 1 || outputRow ~= round(outputRow) || outputRow > ny
-    error(['Requested RBM output row %g, but %s contains %d output rows.'], ...
+    error('Requested RBM output row %g, but %s contains %d output rows.', ...
         outputRow,filename,ny);
 end
 

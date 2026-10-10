@@ -1,4 +1,4 @@
-function result = plot_gust_validation(cfg, inputs, models)
+function result = plot_gust_validation(cfg, models)
 %PLOT_GUST_VALIDATION Compare ZAERO GLOADS OMCOS gust response with MATLAB model.
 %
 % This function compares ZAERO MLDPRNT output with the MATLAB aeroelastic model.
@@ -133,7 +133,7 @@ result.summaryTable = summaryTable;
 % -------------------------------------------------------------------------
 % Plots
 % -------------------------------------------------------------------------
-plot_gust_input(cfg, code.time, ugustCode, model.V, gust);
+plot_gust_input(cfg,code.time,gust);
 plot_modal_overlay(cfg, code, codeCompare, zaero, Nel);
 
 end
@@ -363,7 +363,7 @@ apply_plot_style(fig, cfg);
 end
 
 % =========================================================================
-function plot_gust_input(cfg, time, u, V, gust)
+function plot_gust_input(cfg,time,gust)
 
 fig = figure('Name', 'Gust validation: OMCOS input');
 apply_plot_style(fig, cfg);

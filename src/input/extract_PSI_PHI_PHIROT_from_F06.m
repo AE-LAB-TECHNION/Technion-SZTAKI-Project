@@ -54,9 +54,11 @@ function [PSI, PHI, PHI_ROT, info] = extract_PSI_PHI_PHIROT_from_F06(f06file, mo
     nm = numel(modesToUse);
     collectDispRows = isempty(dispGridIDs) || isempty(rotGridIDs);
     collectStrainRows = isempty(strainElemIDs);
+    rowBlockSize = 1024;
 
     if collectDispRows
-        dispRows = [];
+        dispRows = zeros(rowBlockSize,8);
+        dispRowCount = 0;
         PHI = [];
         PHI_ROT = [];
     else
@@ -65,7 +67,8 @@ function [PSI, PHI, PHI_ROT, info] = extract_PSI_PHI_PHIROT_from_F06(f06file, mo
     end
 
     if collectStrainRows
-        strainRows = [];
+        strainRows = zeros(rowBlockSize,4);
+        strainRowCount = 0;
         PSI = [];
     else
         PSI = nan(numel(strainElemIDs), nm);
@@ -161,16 +164,20 @@ function [PSI, PHI, PHI_ROT, info] = extract_PSI_PHI_PHIROT_from_F06(f06file, mo
             vals = nums(2:7);
 
             if collectDispRows
-                dispRows(end+1,:) = [currentMode, gridID, vals]; %#ok<AGROW>
+                dispRowCount = dispRowCount + 1;
+                if dispRowCount > size(dispRows,1)
+                    dispRows(end+rowBlockSize,8) = 0;
+                end
+                dispRows(dispRowCount,:) = [currentMode,gridID,vals];
             else
                 iDisp = find(dispGridIDs == gridID, 1);
                 if ~isempty(iDisp)
-                    PHI(iDisp, modeCol) = vals(dispCol);
+                    PHI(iDisp, modeCol) = vals(dispCol); %#ok<AGROW>
                 end
 
                 iRot = find(rotGridIDs == gridID, 1);
                 if ~isempty(iRot)
-                    PHI_ROT(iRot, modeCol) = vals(rotCol);
+                    PHI_ROT(iRot, modeCol) = vals(rotCol); %#ok<AGROW>
                 end
             end
 
@@ -198,15 +205,27 @@ function [PSI, PHI, PHI_ROT, info] = extract_PSI_PHI_PHIROT_from_F06(f06file, mo
 
                 if collectStrainRows
                     torsion = nums(base+3);
-                    strainRows(end+1,:) = [currentMode, elemID, axial, torsion]; %#ok<AGROW>
+                    strainRowCount = strainRowCount + 1;
+                    if strainRowCount > size(strainRows,1)
+                        strainRows(end+rowBlockSize,4) = 0;
+                    end
+                    strainRows(strainRowCount,:) = ...
+                        [currentMode,elemID,axial,torsion];
                 else
                     iStrain = find(strainElemIDs == elemID, 1);
                     if ~isempty(iStrain)
-                        PSI(iStrain, modeCol) = axial;
+                        PSI(iStrain, modeCol) = axial; %#ok<AGROW>
                     end
                 end
             end
         end
+    end
+
+    if collectDispRows
+        dispRows = dispRows(1:dispRowCount,:);
+    end
+    if collectStrainRows
+        strainRows = strainRows(1:strainRowCount,:);
     end
 
     if isempty(availableModesDisp)

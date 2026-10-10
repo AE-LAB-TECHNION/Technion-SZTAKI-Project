@@ -45,16 +45,9 @@ fid = fopen(filename, 'r');
 if fid == -1
     error('Could not open file: %s', filename);
 end
-cleaner = onCleanup(@() fclose(fid)); %#ok<NASGU>
-
-lines = {};
-while true
-    line = fgetl(fid);
-    if ~ischar(line)
-        break
-    end
-    lines{end+1, 1} = line; %#ok<AGROW>
-end
+cleaner = onCleanup(@() fclose(fid));
+contents = textscan(fid,'%s','Delimiter','\n','Whitespace','');
+lines = contents{1};
 
 end
 
@@ -79,7 +72,8 @@ if isempty(headerIdx)
     error('FEM modal eigenvalue table header not found in file %s.', filename);
 end
 
-modalTable = [];
+modalTable = zeros(numel(lines)-headerIdx,7);
+rowCount = 0;
 tableStarted = false;
 
 for i = headerIdx+1:numel(lines)
@@ -87,7 +81,8 @@ for i = headerIdx+1:numel(lines)
     nums = sscanf(line, '%f');
 
     if numel(nums) >= 7 && is_integer_value(nums(1)) && is_integer_value(nums(2))
-        modalTable(end+1, :) = nums(1:7).'; %#ok<AGROW>
+        rowCount = rowCount + 1;
+        modalTable(rowCount,:) = nums(1:7).';
         tableStarted = true;
         continue
     end
@@ -96,6 +91,8 @@ for i = headerIdx+1:numel(lines)
         break
     end
 end
+
+modalTable = modalTable(1:rowCount,:);
 
 if isempty(modalTable)
     error('No FEM modal eigenvalue rows were found in file %s.', filename);

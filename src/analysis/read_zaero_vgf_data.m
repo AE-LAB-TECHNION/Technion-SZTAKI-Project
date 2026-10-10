@@ -30,24 +30,18 @@ fid = fopen(filename, 'r');
 if fid == -1
     error('Could not open file: %s', filename);
 end
-cleaner = onCleanup(@() fclose(fid)); %#ok<NASGU>
-
-lines = {};
-while true
-    line = fgetl(fid);
-    if ~ischar(line)
-        break
-    end
-    lines{end+1, 1} = line; %#ok<AGROW>
-end
+cleaner = onCleanup(@() fclose(fid));
+contents = textscan(fid,'%s','Delimiter','\n','Whitespace','');
+lines = contents{1};
 
 end
 
 % =========================================================================
 function tables = parse_vgf_tables(lines, numPhysicalModes)
 
-tables = empty_vgf_table(0);
-tables = tables([]);
+maxTables = sum(contains(lines,'THE FOLLOWING V-G-F TABLE LISTS'));
+tables = repmat(empty_vgf_table(0),1,maxTables);
+tableCount = 0;
 i = 1;
 
 while i <= numel(lines)
@@ -67,11 +61,14 @@ while i <= numel(lines)
         numAeroLagRoots, numPhysicalModes);
 
     if ~isempty(table.airspeed)
-        tables(end+1) = table; %#ok<AGROW>
+        tableCount = tableCount + 1;
+        tables(tableCount) = table;
     end
 
     i = max(i + 1, nextIdx);
 end
+
+tables = tables(1:tableCount);
 
 end
 

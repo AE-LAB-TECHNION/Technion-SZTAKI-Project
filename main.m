@@ -1,8 +1,7 @@
 clc; clear; close all;
-clear functions;
 
-addpath(genpath(fullfile('src')));
-addpath(genpath(fullfile('zaero_model_comparison')));
+addpath(genpath('src'));
+addpath(genpath('zaero_model_comparison'));
 
 cfg = default_analysis_config();
 results = run_analysis(cfg);

@@ -10,7 +10,6 @@ cfg.L = 0.05;        % length scale [m], usually half-chord
 cfg.zeta = 0;        % modal damping ratio
 
 cfg.modelType = 'plant'; % 'ae' or 'plant'
-cfg.isgust = 0;      % fallback if gust count is not reported by ZAERO
 cfg.numControlSurfaces = 4; % fallback if control-surface count is not reported by ZAERO
 cfg.numGustInputs = []; % derived from ZAERO/RFA when gust columns exist
 
@@ -30,6 +29,11 @@ cfg.sensor = default_sensor_config();
 
 cfg.airspeed = 25:0.25:50;
 
+% Analysis selection
+cfg.analysis.rootLocus = true;
+cfg.analysis.omegaVG = false;
+cfg.analysis.strainModes = false;
+cfg.analysis.gust = true;
 
 % System input-output response figures
 cfg.responsePlots.modalBode = false;
@@ -42,8 +46,7 @@ cfg.responsePlots.stepRbm = false;
 cfg.bodeSpeed = 35;  % [m/s]
 cfg.bodeFrequency = logspace(-1, 3, 500); % [rad/s]
 
-% Diagnostic strain-mode plots. Requires cfg.datFile to exist.
-cfg.plotStrainModes = false;
+% Diagnostic strain-mode settings. Requires cfg.datFile to exist.
 cfg.normalizeStrainModes = false;
 cfg.datFile = fullfile(modelData,'MODEL-0012.dat');
 
@@ -53,8 +56,7 @@ cfg.responseStepTime = 0:0.001:2;  % [s]
 cfg.responseStepCommandDeg = 1;    % [deg]
 cfg.responseStrongestStrainCount = 5;
 
-% Gust validation against ZAERO MLDPRNT output
-cfg.plotGustValidation = true;
+% Gust analysis
 cfg.gustModel = 'dryden';           % 'omcos' or 'dryden'
 cfg.gustValidationSpeed = 35;       % [m/s]
 cfg.gustResponseFile = fullfile( ...
@@ -88,7 +90,6 @@ cfg.drydenRandomSeed = 1;                % reproducible displayed realization
 % Plotting settings
 
 cfg.rootLocusFigure = 101;
-cfg.plotOmegaVG = false;
 cfg.omegaVGFigure = 102;
 cfg.omegaVGDampingYLim = [-0.5, 0.5];
 cfg.rootLocusXLim = [-100, 100];
@@ -106,17 +107,10 @@ cfg.plotTextInterpreter = 'tex';
 cfg.plotLegendInterpreter = cfg.plotTextInterpreter;
 cfg.plotTickLabelInterpreter = cfg.plotTextInterpreter;
 
-% Analysis selection and output behavior.
-cfg.analysis.rootLocus = true;
-cfg.analysis.omegaVG = cfg.plotOmegaVG;
-cfg.analysis.strainModes = cfg.plotStrainModes;
-cfg.analysis.gust = cfg.plotGustValidation;
-cfg.analysis.gustModel = cfg.gustModel;
-
+% Output behavior
 cfg.output.showFigures = true;
 cfg.output.saveFigures = false;
 cfg.output.figureDirectory = fullfile(projectRoot,'output','figures');
 cfg.output.figureResolution = 300;
 
 end
-

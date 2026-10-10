@@ -286,7 +286,7 @@ if ~isnan(val)
     return
 end
 
-if isempty(regexpi(s, '[Ee]'))
+if isempty(regexpi(s,'[Ee]','once'))
     tok = regexp(s, '^([+-]?\d*\.?\d*)([+-]\d+)$', 'tokens', 'once');
     if ~isempty(tok)
         val = str2double([tok{1} 'e' tok{2}]);

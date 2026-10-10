@@ -3,6 +3,7 @@ fid= fopen(filename,'rt');
 if (fid == -1)
     error([ filename, ' doesn`t exist']);
 end
+cleaner = onCleanup(@() fclose(fid));
 
 %% Moving through the file to the requested matrix
 tline = fgetl(fid);
@@ -20,13 +21,12 @@ end
 
 %% Record 1: matrix characteristics
 tmp=fscanf(fid,' %d ',4);
-COL=tmp(1); ROW=tmp(2); NF=tmp(3); Ntype=tmp(4);
+COL=tmp(1); ROW=tmp(2); Ntype=tmp(4);
 tmp=fgetl(fid);
 MatrixName=tmp(1:8);
 if ~contains(MatrixName,Mat_Name)
     warning('Matrix names are not right, the function is not working properly')
 end
-MatrixType=tmp(9:17);
 A=zeros(ROW,COL);
 %% Record 2: matrix data
 switch Ntype
@@ -50,7 +50,6 @@ switch Ntype
             A(iROW:iROW+NW/2-1,iCOL)=tmp(1:2:NW-1)+1i*tmp(2:2:NW);
         end
 end
-fclose('all');
 
 if sum(sum(isnan(A)+isinf(A)))
     warning('NaN or inf numbers in filename %s',filename)

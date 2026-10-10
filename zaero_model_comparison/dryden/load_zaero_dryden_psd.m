@@ -65,17 +65,18 @@ while i <= numel(lines)
         ids = unique(repeatedIds,'stable');
         nIds = numel(ids);
 
-        fBlock = [];
-        realBlock = [];
-
         j = i + 2;
+        maxBlockRows = numel(lines)-j+1;
+        fBlock = zeros(maxBlockRows,1);
+        realBlock = zeros(maxBlockRows,nIds);
+        blockRowCount = 0;
 
         while j <= numel(lines)
 
             line = strtrim(lines{j});
 
             if isempty(line)
-                if ~isempty(fBlock)
+                if blockRowCount > 0
                     break
                 end
                 j = j + 1;
@@ -94,22 +95,26 @@ while i <= numel(lines)
             % Each auto/cross PSD has real and imaginary columns:
             % f, Re1, Im1, Re2, Im2, ...
             if numel(vals) == 1 + 2*nIds
-                fBlock(end+1,1) = vals(1); %#ok<AGROW>
+                blockRowCount = blockRowCount + 1;
+                fBlock(blockRowCount) = vals(1);
 
                 row = zeros(1,nIds);
                 for k = 1:nIds
                     row(k) = vals(2*k);   % real part
                 end
 
-                realBlock(end+1,:) = row; %#ok<AGROW>
-            elseif ~isempty(fBlock)
+                realBlock(blockRowCount,:) = row;
+            elseif blockRowCount > 0
                 break
             end
 
             j = j + 1;
         end
 
-        if ~isempty(fBlock)
+        fBlock = fBlock(1:blockRowCount);
+        realBlock = realBlock(1:blockRowCount,:);
+
+        if blockRowCount > 0
             for k = 1:nIds
                 allIds(end+1) = ids(k); %#ok<AGROW>
                 allFrequency{end+1} = fBlock; %#ok<AGROW>

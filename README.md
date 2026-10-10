@@ -72,6 +72,12 @@ from the parameters in `default_analysis_config.m`. ZAERO Dryden result
 files are used only as validation references. See
 `zaero_model_comparison/README.md` for the comparison workflow.
 
-Select `cfg.gustModel = 'dryden'` or `'omcos'` in
-`default_analysis_config.m`. ZAERO comparison figures can be disabled
-without changing the MATLAB model.
+Select the gust analysis in `default_analysis_config.m`:
+
+```matlab
+cfg.analysis.gust = true;
+cfg.gustModel = 'dryden';       % 'dryden' or 'omcos'
+cfg.compareDrydenZaero = false; % MATLAB-only Dryden figures
+```
+
+Disabling the ZAERO Dryden comparison does not change the MATLAB model.

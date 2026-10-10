@@ -289,7 +289,7 @@ end
     sensor.strainElemIDs);
 
 if cfg.useSensorCache
-    info = sensorInfo; %#ok<NASGU>
+    info = sensorInfo;
     save(cfg.sensorCacheFile, 'PSI', 'PHI', 'PHI_ROT', 'sensorInfo', 'info', 'cacheInfo');
     fprintf('\nSaved sensor/modal matrices to cache: %s\n', cfg.sensorCacheFile);
 end

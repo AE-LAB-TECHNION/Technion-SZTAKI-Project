@@ -2,21 +2,26 @@ function [models, eigTraj, plotModelName] = run_airspeed_sweep(cfg, inputs)
 %RUN_AIRSPEED_SWEEP Build models and eigenvalue trajectories over airspeed.
 
 nV = numel(cfg.airspeed);
-models = cell(nV, 1);
-eigTraj = [];
-plotModelName = '';
+if nV == 0
+    error('cfg.airspeed must contain at least one velocity.');
+end
 
-for i = 1:nV
+models = cell(nV, 1);
+
+[model, Aplot, plotModelName] = build_model_at_speed( ...
+    cfg,inputs,cfg.airspeed(1));
+models{1} = model;
+eigTraj = zeros(size(Aplot,1),nV);
+eigTraj(:,1) = eig(Aplot);
+print_model_sizes(model,plotModelName);
+
+for i = 2:nV
     V = cfg.airspeed(i);
 
     [model, Aplot, plotModelName] = build_model_at_speed(cfg, inputs, V);
 
     models{i} = model;
     eigTraj(:, i) = eig(Aplot);
-
-    if i == 1
-        print_model_sizes(model, plotModelName);
-    end
 end
 
 end
