@@ -52,6 +52,7 @@ colors = [ ...
     0.10 0.55 0.25];
 
 nPlotModes = min(3, Nel);
+timeLimit = min(5, time(end));
 fig = figure('Name', 'OMCOS solver errors versus ZAERO');
 apply_plot_style(fig, cfg);
 tiledlayout(2, 3, 'TileSpacing', 'compact', 'Padding', 'compact');
@@ -68,6 +69,7 @@ for modeIndex = 1:nPlotModes
     end
     yline(0, ':', 'Color', [0.45 0.45 0.45]);
     grid on; box on;
+    xlim([0, timeLimit]);
     title(sprintf('MODALX error, mode %d', modeIndex));
     xlabel('Time [s]');
     ylabel('\Delta\xi');
@@ -88,6 +90,7 @@ for modeIndex = 1:nPlotModes
     end
     yline(0, ':', 'Color', [0.45 0.45 0.45]);
     grid on; box on;
+    xlim([0, timeLimit]);
     title(sprintf('MODALV error, mode %d', modeIndex));
     xlabel('Time [s]');
     ylabel('\Delta(d\xi/dt)');

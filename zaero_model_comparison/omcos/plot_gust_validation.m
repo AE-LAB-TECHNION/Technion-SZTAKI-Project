@@ -250,6 +250,8 @@ end
 % =========================================================================
 function plot_modal_overlay(cfg, code, codeCompare, zaero, Nel)
 
+timeLimit = min(5, zaero.time(end));
+
 % -------------------------------------------------------------------------
 % Modal displacement
 % -------------------------------------------------------------------------
@@ -280,6 +282,7 @@ for k = 1:Nel
         'MarkerFaceColor', 'w');
 
     grid on; box on;
+    xlim([0, timeLimit]);
     ylabel(sprintf('\\xi_%d', k));
 
     if k == 1
@@ -298,6 +301,7 @@ for k = 1:Nel
     yline(0, ':', 'Color', [0.45 0.45 0.45], 'LineWidth', 1.0);
 
     grid on; box on;
+    xlim([0, timeLimit]);
     ylabel(sprintf('\\Delta \\xi_%d', k));
 
 end
@@ -335,6 +339,7 @@ for k = 1:Nel
         'MarkerFaceColor', 'w');
 
     grid on; box on;
+    xlim([0, timeLimit]);
     ylabel(sprintf('d\\xi_%d/dt', k));
 
     if k == 1
@@ -353,6 +358,7 @@ for k = 1:Nel
     yline(0, ':', 'Color', [0.45 0.45 0.45], 'LineWidth', 1.0);
 
     grid on; box on;
+    xlim([0, timeLimit]);
     ylabel(sprintf('\\Delta(d\\xi_%d/dt)', k));
 
 end
