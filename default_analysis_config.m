@@ -60,7 +60,7 @@ cfg.responseStrongestStrainCount = 5;
 cfg.gustModel = 'omcos';            % 'omcos' or 'dryden'
 cfg.gustValidationSpeed = 35;       % [m/s]
 cfg.gustResponseFile = fullfile( ...
-    zaeroComparison,'omcos','GUSTFREQ');
+    zaeroComparison,'omcos','GUSTP20');
 cfg.gustLG = 1.0;                  % [s], DGUST OMCOSP LG
 cfg.gustWGV = 0.1;                 % DGUST OMCOSP WGV = w_g/V
 cfg.gustX0 = 0.0;                  % [m], DGUST gust reference point

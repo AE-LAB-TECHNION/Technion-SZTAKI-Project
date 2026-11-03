@@ -17,7 +17,7 @@ if nargin < 3 || isempty(gustLengths)
     gustLengths = [1.18 2.5 7 35];
 end
 if nargin < 4 || isempty(timeEnd)
-    timeEnd = 5;
+    timeEnd = 10;
 end
 
 gustLengths = gustLengths(:).';
