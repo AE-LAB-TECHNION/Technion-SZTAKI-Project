@@ -30,16 +30,17 @@ cfg.sensor = default_sensor_config();
 cfg.airspeed = 25:0.25:50;
 
 % Analysis selection
-cfg.analysis.rootLocus = true;
+cfg.analysis.rootLocus = false;
 cfg.analysis.omegaVG = false;
 cfg.analysis.strainModes = false;
 cfg.analysis.gust = true;
 
 % System input-output response figures
 cfg.responsePlots.modalBode = false;
-cfg.responsePlots.rbmBode = true;
+cfg.responsePlots.rbmBode = false;
 cfg.responsePlots.stepRate = false;
-cfg.responsePlots.stepDisp = false;
+cfg.responsePlots.stepAcceleration = false;
+cfg.responsePlots.stepDisp = false; % legacy alias for stepAcceleration
 cfg.responsePlots.stepStrain = false;
 cfg.responsePlots.stepRbm = false;
 
@@ -47,7 +48,7 @@ cfg.bodeSpeed = 35;  % [m/s]
 cfg.bodeFrequency = logspace(-1, 3, 500); % [rad/s]
 
 % Diagnostic strain-mode settings. Requires cfg.datFile to exist.
-cfg.normalizeStrainModes = false;
+cfg.normalizeStrainModes = true;
 cfg.datFile = fullfile(modelData,'MODEL-0012.dat');
 
 % Time-domain response settings
@@ -57,10 +58,9 @@ cfg.responseStepCommandDeg = 1;    % [deg]
 cfg.responseStrongestStrainCount = 5;
 
 % Gust analysis
-cfg.gustModel = 'omcos';            % 'omcos' or 'dryden'
+cfg.gustModel = 'dryden';            % 'omcos' or 'dryden'
 cfg.gustValidationSpeed = 35;       % [m/s]
-cfg.gustResponseFile = fullfile( ...
-    zaeroComparison,'omcos','GUSTP20');
+cfg.gustResponseFile = fullfile(zaeroComparison,'omcos','GUSTP5');
 cfg.gustLG = 1.0;                  % [s], DGUST OMCOSP LG
 cfg.gustWGV = 0.1;                 % DGUST OMCOSP WGV = w_g/V
 cfg.gustX0 = 0.0;                  % [m], DGUST gust reference point
@@ -77,10 +77,10 @@ cfg.drydenFrequencyStart = 0;             % [Hz]
 cfg.drydenFrequencyStep = 0.01;           % [Hz]
 cfg.drydenFrequencyEnd = 100;             % [Hz]
 cfg.drydenZaeroOutputFile = fullfile( ...
-    zaeroComparison,'dryden','ASE_ANALYSIS_DRY_RBM.out');
+    zaeroComparison,'dryden','ASE_ANALYSIS_DRYDEN.out');
 cfg.compareDrydenZaero = true;
 cfg.drydenZaeroPsdFile = fullfile( ...
-    zaeroComparison,'dryden','DRYPSD.P');
+    zaeroComparison,'dryden','DRYDEN_MODAL_PSD.P');
 cfg.drydenTau = 1e-4;                    % [s], LPF on gust-rate output only
 cfg.drydenPsdDuration = 60;              % [s], stationary PSD realization
 cfg.drydenPsdTimeStep = 1e-3;            % [s]
@@ -109,7 +109,7 @@ cfg.plotTickLabelInterpreter = cfg.plotTextInterpreter;
 
 % Output behavior
 cfg.output.showFigures = true;
-cfg.output.saveFigures = false;
+cfg.output.saveFigures = true;
 cfg.output.figureDirectory = fullfile(projectRoot,'output','figures');
 cfg.output.figureResolution = 300;
 

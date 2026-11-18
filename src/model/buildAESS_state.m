@@ -126,6 +126,7 @@ elseif isgust==0 && includeControlInputs==1
 
     A0c = RFA_mat.A0(mode_idx, ctrl_idx);
     A1c = RFA_mat.A1(mode_idx, ctrl_idx);
+    A2c = RFA_mat.A2(mode_idx, ctrl_idx);
     Ec  = RFA_mat.E(Xae_idx, ctrl_idx);
 
     Dlag = RFA_mat.D(mode_idx, Xae_idx);
@@ -142,13 +143,14 @@ elseif isgust==0 && includeControlInputs==1
 
     % u_ae = [delta; delta_dot; delta_ddot]
     %
-    % According to your current formulation:
     % xi_ddot receives:
-    %   q*invM*A0c*delta + q*(L/V)*invM*A1c*delta_dot + 0*delta_ddot
+    %   q*invM*A0c*delta
+    %   + q*(L/V)*invM*A1c*delta_dot
+    %   + q*(L/V)^2*invM*A2c*delta_ddot
     % Xa_dot receives:
     %   0*delta + Ec*delta_dot + 0*delta_ddot
     Bae = [ zeros(Nel, Nctrl),              zeros(Nel, Nctrl),                 zeros(Nel, Nctrl); ...
-            qdyn*(Mbar\A0c),                qdyn*(L/V)*(Mbar\A1c),             zeros(Nel, Nctrl); ...
+            qdyn*(Mbar\A0c),                qdyn*(L/V)*(Mbar\A1c),             qdyn*(L/V)^2*(Mbar\A2c); ...
             zeros(Nxae, Nctrl),             Ec,                                zeros(Nxae, Nctrl) ];
 
     Baw = zeros(size(Aae,1),0);
@@ -205,6 +207,7 @@ elseif isgust==1 && includeControlInputs==1
 
     A0c = RFA_mat.A0(mode_idx, ctrl_idx);
     A1c = RFA_mat.A1(mode_idx, ctrl_idx);
+    A2c = RFA_mat.A2(mode_idx, ctrl_idx);
     A0g = RFA_mat.A0(mode_idx, gust_idx);
     A1g = RFA_mat.A1(mode_idx, gust_idx);
 
@@ -225,7 +228,7 @@ elseif isgust==1 && includeControlInputs==1
 
     % u_ae = [delta; delta_dot; delta_ddot]
     Bae = [ zeros(Nel, Nctrl),              zeros(Nel, Nctrl),                 zeros(Nel, Nctrl); ...
-            qdyn*(Mbar\A0c),                qdyn*(L/V)*(Mbar\A1c),             zeros(Nel, Nctrl); ...
+            qdyn*(Mbar\A0c),                qdyn*(L/V)*(Mbar\A1c),             qdyn*(L/V)^2*(Mbar\A2c); ...
             zeros(Nxae, Nctrl),             Ec,                                zeros(Nxae, Nctrl) ];
 
     % wbar = [w_g/V for each gust vector; wdot_g/V for each gust vector]

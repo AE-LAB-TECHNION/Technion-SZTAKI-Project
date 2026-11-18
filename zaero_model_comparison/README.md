@@ -8,20 +8,21 @@ define the MATLAB Dryden filter.
 
 `dryden` contains:
 
-- `ASE_ANALYSIS_DRY_RBM.inp`: ZAERO continuous-gust input deck.
-- `ASE_ANALYSIS_DRY_RBM.out`: ZAERO gust-spectrum reference output.
-- `DRYPSD.P`: ZAERO modal-response PSD reference.
+- `ASE_ANALYSIS_DRYDEN.inp`: ZAERO continuous-gust input deck.
+- `ASE_ANALYSIS_DRYDEN.out`: ZAERO gust-spectrum reference output.
+- `DRYDEN_MODAL_PSD.P`: ZAERO modal-response PSD reference.
 - MATLAB readers and plotting functions for the comparison.
 
 The MATLAB model uses the Dryden parameters defined in
 `default_analysis_config.m`: flight velocity, scale length, gust RMS and
 gust-rate low-pass-filter time constant. The MATLAB response is calculated
-through the full 61-state augmented model and does not use ZAERO QHG data.
+through the full 31-state augmented model and does not use ZAERO QHG data.
 
 ## One-minus-cosine gust
 
-`omcos` contains the ZAERO input deck, the `GUSTXI` reference response and
-the MATLAB functions used for the time-domain solver comparison.
+`omcos` contains the current partitioned five-lag ZAERO responses
+(`GUSTP5` and `QHGP5`) and the MATLAB functions used for the time-domain
+solver comparison.
 
 ## ZAERO inputs
 

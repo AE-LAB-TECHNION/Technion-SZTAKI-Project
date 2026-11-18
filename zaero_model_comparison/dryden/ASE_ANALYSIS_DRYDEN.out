@@ -50,7 +50,7 @@
 
 
 
-                                              * * * PROGRAM STARTED ON 10/09/2026 AT 20:43:40 * * *
+                                              * * * PROGRAM STARTED ON 11/18/2026 AT 13:49:22 * * *
 
 
 
@@ -86,7 +86,7 @@
                                   SUBTITLE= FREQUENCY DOMAIN FLUTTER ANALYSIS M=0.0 SEA LEVEL                     
                                   FLUTTER = 100                                                                   
                                   SUBCASE = 3                                                                     
-                                  SUBTITLE = CONTINUOUS DRYDEN GUST ANALYSIS                                      
+                                  SUBTITLE = CONTINUOUS DRYDEN GUST AT 35 M/S                                     
                                   GLOADS = 200                                                                    
                                   BEGIN BULK                                                                      
 
@@ -105,306 +105,330 @@
                         7 -       AEFACT  20      0.000   5.625   11.25   16.875  22.5    28.2125 33.925  +AE20   
                         8 -       +AE20   39.6375 45.35   51.0625 56.775  62.4875 68.2    76.15   84.1    +AE21   
                         9 -       +AE21   92.05   100.00                                                          
-                       10 -       AEROLAG 120     20      0.0                                                     
+                       10 -       AEROLAG 120     5       0.0                                                     
                        11 -       AEROZ           YES     NO      KG      M       0.1     0.612   0.1224  +AZ1    
                        12 -       +AZ1    0.025                                                                   
                        13 -       AESURFZ CF1     SYM     -401    4000    400     601                             
                        14 -       AESURFZ CF2     SYM     -401    5000    500     602                             
                        15 -       AESURFZ CF3     SYM     -401    6000    600     603                             
                        16 -       AESURFZ CF4     SYM     -401    7000    700     604                             
-                       17 -       APCNSND 10      1       1       1       -1      0                               
-                       18 -       APCONST 10      1       1       0       1       1       1       1               
-                       19 -       ASE     100     250     100             170                                     
-                       20 -       ASECONT 250     350     900                                                     
-                       21 -       ASECONT 251     350     910                                                     
-                       22 -       ASEOUT  20      200     1       PLANT   300     DRYFRF  FORMAT                  
-                       23 -       ASEOUT  1200    100     1       AEMODEL         AERBM.S                         
-                       24 -       ASEOUT  1201    100     1       PLANT           PLTRBM.S                        
-                       25 -       ASESNSR 100     20      100                     NO                              
-                       26 -       ASESNSR 901     60      1                                                       
-                       27 -       ASESNSR 902     60      2                                                       
-                       28 -       ASESNSR 903     60      3                                                       
-                       29 -       CAERO7  1001    WING1           9       17              0       0       +C7W1   
-                       30 -       +C7W1   0.0     0.0     0.0     0.1     20                              +C7W2   
-                       31 -       +C7W2   0.0     0.12    0.0     0.1     20                                      
-                       32 -       CAERO7  2001    WING21          9       13              0       0       +C7W1   
-                       33 -       +C7W1   0.0     0.12    0.0     0.0682  10                              +C7W2   
-                       34 -       +C7W2   0.0     0.24    0.0     0.0682  10                                      
-                       35 -       CAERO7  2201    WING22          9       13              0       0       +C7W1   
-                       36 -       +C7W1   0.0     0.24    0.0     0.0682  10                              +C7W2   
-                       37 -       +C7W2   0.0     0.36    0.0     0.0682  10                                      
-                       38 -       CAERO7  2401    WING23          9       13              0       0       +C7W1   
-                       39 -       +C7W1   0.0     0.36    0.0     0.0682  10                              +C7W2   
-                       40 -       +C7W2   0.0     0.48    0.0     0.0682  10                                      
-                       41 -       CAERO7  2601    WING24          9       13              0       0       +C7W1   
-                       42 -       +C7W1   0.0     0.48    0.0     0.0682  10                              +C7W2   
-                       43 -       +C7W2   0.0     0.6     0.0     0.0682  10                                      
-                       44 -       CAERO7  3001    WINGEXT         3       17              0       0       +C7W1   
-                       45 -       +C7W1   0.0     0.6     0.0     0.1     20                              +C7W2   
-                       46 -       +C7W2   0.0     0.612   0.0     0.1     20                                      
-                       47 -       CAERO7  4001    FLAP1           9       5               0       0       +C7W1   
-                       48 -       +C7W1   0.0682  0.12    0.0     0.0318                                  +C7W2   
-                       49 -       +C7W2   0.0682  0.24    0.0     0.0318                                          
-                       50 -       CAERO7  5001    FLAP2           9       5               0       0       +C7W1   
-                       51 -       +C7W1   0.0682  0.24    0.0     0.0318                                  +C7W2   
-                       52 -       +C7W2   0.0682  0.36    0.0     0.0318                                          
-                       53 -       CAERO7  6001    FLAP3           9       5               0       0       +C7W1   
-                       54 -       +C7W1   0.0682  0.36    0.0     0.0318                                  +C7W2   
-                       55 -       +C7W2   0.0682  0.48    0.0     0.0318                                          
-                       56 -       CAERO7  7001    FLAP4           9       5               0       0       +C7W1   
-                       57 -       +C7W1   0.0682  0.48    0.0     0.0318                                  +C7W2   
-                       58 -       +C7W2   0.0682  0.6     0.0     0.0318                                          
-                       59 -       CGUST   10      DRYP    0.75    0.0285710.0     100.0   -0.01   0.7             
-                       60 -       CORD2R  401     0       0.0682  0.      0.      0.0682  0.6     0.      +CR11   
-                       61 -       +CR11   0.0682  0.6     0.005                                                   
-                       62 -       CROSPSD 101     MODALX  1               1                                       
-                       63 -       CROSPSD 102     MODALX  2               2                                       
-                       64 -       CROSPSD 103     MODALX  3               3                                       
-                       65 -       CROSPSD 104     MODALV  1               1                                       
-                       66 -       CROSPSD 105     MODALV  2               2                                       
-                       67 -       CROSPSD 106     MODALV  3               3                                       
-                       68 -       FIXMDEN 100     100     1.225   KG      M       1.0     0       1       +       
-                       69 -       +       35.0                                                                    
-                       70 -       FLUTTER 100     SYM     100     3       0                       30              
-                       71 -       FREQ1   300     0.0     0.01    10000                                           
-                       72 -       GENGUST 100     100     SYM     1       90.0    0.0     0.0     0       +GG1    
-                       73 -       +GG1    0.0                                                                     
-                       74 -       GLOADS  200     251     100     0               10              100     +GL     
-                       75 -       +GL     SAVE    FORMAT  QHG.DAT                                                 
-                       76 -       LOADMOD 100     XMOMENT         100     200                                     
-                       77 -       MINSTAT 170     120     100     10      0       0                       +BC     
-                       78 -       +BC     -2      SAVE    APPROX.DAT              120                             
-                       79 -       MKAEROZ 100     0.1028530       0       ACQU    AE_RBM_SYM.0            +MK1    
-                       80 -       +MK1    0.01    0.02    0.03    0.04    0.05    0.06    0.07    0.1     +MK2    
-                       81 -       +MK2    0.12    0.125   0.13    0.14    0.15    0.2     0.25    0.3     +MK3    
-                       82 -       +MK3    0.4     0.5     0.6     0.7     0.8     0.9     1.0     1.5             
-                       83 -       MLDPRNT 100     DRY.PLT         TABLE   PSD     0.0     100.0   NO      +MP1    
-                       84 -       +MP1    MODALX  1       MODALX  2       MODALX  3       MODALV  1       +MP2    
-                       85 -       +MP2    MODALV  2       MODALV  3                                               
-                       86 -       MLDPRNT 100     DRYPSD.P        TABLE   PSD     0.0     100.0   NO      +PS1    
-                       87 -       +PS1    CROSPSD 101     CROSPSD 102     CROSPSD 103     CROSPSD 104     +PS2    
-                       88 -       +PS2    CROSPSD 105     CROSPSD 106                                             
-                       89 -       OMITMOD SYMM                                                            +OMT    
-                       90 -       +OMT    3                                                                       
-                       91 -       PANLST1 1000    1001    1001    1128                                            
-                       92 -       PANLST1 2000    2001    2001    2096                                            
-                       93 -       PANLST1 2200    2201    2201    2296                                            
-                       94 -       PANLST1 2400    2401    2401    2496                                            
-                       95 -       PANLST1 2600    2601    2601    2696                                            
-                       96 -       PANLST1 3000    3001    3001    3032                                            
-                       97 -       PANLST1 4000    4001    4001    4032                                            
-                       98 -       PANLST1 5000    5001    5001    5032                                            
-                       99 -       PANLST1 6000    6001    6001    6032                                            
-                      100 -       PANLST1 7000    7001    7001    7032                                            
-                      101 -       PANLST3 100     WING1   WING21  WING22  WING23  WINGEXT FLAP1   FLAP2   +PAN1   
-                      102 -       +PAN1   FLAP3   FLAP4                                                           
-                      103 -       PLTMIST 10001   100     1       1                       MNSTSI1J1.TXT           
-                      104 -       PLTMIST 10002   100     1       2                       MNSTSI1J2.TXT           
-                      105 -       PLTMIST 10003   100     1       3                       MNSTSI1J3.TXT           
-                      106 -       PLTMIST 10009   100     2       1                       MNSTSI2J1.TXT           
-                      107 -       PLTMIST 10010   100     2       2                       MNSTSI2J2.TXT           
-                      108 -       PLTMIST 10011   100     2       3                       MNSTSI2J3.TXT           
-                      109 -       PLTMIST 10017   100     3       1                       MNSTSI3J1.TXT           
-                      110 -       PLTMIST 10018   100     3       2                       MNSTSI3J2.TXT           
-                      111 -       PLTMIST 10019   100     3       3                       MNSTSI3J3.TXT           
-                      112 -       PLTVG   11      100     8       V               VG.PLT                          
-                      113 -       SENSET  900     901     902     903     100                                     
-                      114 -       SENSET  910     901     902     903                                             
-                      115 -       SET1    100     53      284     316     1       54      381     353     +SE1    
-                      116 -       +SE1    22      71      448     433     43      1217    1276    1272    +SE2    
-                      117 -       +SE2    1268    1365    1369    1373    1377    92      519     1060    +SE3    
-                      118 -       +SE3    113     539     585     1512    1516    1520    1524    1659    +SE4    
-                      119 -       +SE4    1663    1667    1671    134     575     1132    155     632     +SE5    
-                      120 -       +SE5    617     1806    1810    1814    1818    1953    1957    1961    +SE6    
-                      121 -       +SE6    1965    176     720     1169    197     648     633     2100    +SE7    
-                      122 -       +SE7    2104    2108    2112    2247    2251    2255    2259    218     +SE8    
-                      123 -       +SE8    757     1185    239     824     809     2394    2398    2402    +SE9    
-                      124 -       +SE9    2406    2541    2545    2549    2553    48      260     884     +SE10   
-                      125 -       +SE10   869     44      9484    10774   9488                                    
-                      126 -       SET1    200     1       THRU    1046                                            
-                      127 -       SET1    200     1048    THRU    1251                                            
-                      128 -       SET1    200     1258    THRU    1358                                            
-                      129 -       SET1    200     1360    THRU    1527                                            
-                      130 -       SET1    200     1529    THRU    1945                                            
-                      131 -       SET1    200     1947    THRU    2095                                            
-                      132 -       SET1    200     2097    THRU    2534                                            
-                      133 -       SET1    200     2536    THRU    2687                                            
-                      134 -       SET1    200     2689    THRU    2951                                            
-                      135 -       SET1    200     2953    THRU    2975                                            
-                      136 -       SET1    200     2977    THRU    2980                                            
-                      137 -       SET1    200     2982    THRU    3011                                            
-                      138 -       SET1    200     3013    THRU    3017                                            
-                      139 -       SET1    200     3022                                                            
-                      140 -       SET1    200     3026    THRU    3140                                            
-                      141 -       SET1    200     3142    THRU    3242                                            
-                      142 -       SET1    200     3244    THRU    3557                                            
-                      143 -       SET1    200     3559    THRU    3686                                            
-                      144 -       SET1    200     3688    THRU    3856                                            
-                      145 -       SET1    200     3861    THRU    3874                                            
-                      146 -       SET1    200     3879    THRU    3920                                            
-                      147 -       SET1    200     3925    THRU    3934                                            
-                      148 -       SET1    200     3939    THRU    3978                                            
-                      149 -       SET1    200     3981    THRU    4025                                            
-                      150 -       SET1    200     4029    THRU    4052                                            
-                      151 -       SET1    200     4057    THRU    4088                                            
-                      152 -       SET1    200     4092    THRU    4121                                            
-                      153 -       SET1    200     4128    THRU    4157                                            
-                      154 -       SET1    200     4160    THRU    4218                                            
-                      155 -       SET1    200     4220    THRU    4224                                            
-                      156 -       SET1    200     4227    THRU    4272                                            
-                      157 -       SET1    200     4274    THRU    4354                                            
-                      158 -       SET1    200     4373    THRU    4375                                            
-                      159 -       SET1    200     4377                                                            
-                      160 -       SET1    200     4391    THRU    4540                                            
-                      161 -       SET1    200     4546    THRU    4551                                            
-                      162 -       SET1    200     4554    THRU    4555                                            
-                      163 -       SET1    200     4557                                                            
-                      164 -       SET1    200     4559    THRU    4738                                            
-                      165 -       SET1    200     4740    THRU    4744                                            
-                      166 -       SET1    200     4746    THRU    4948                                            
-                      167 -       SET1    200     4967    THRU    4973                                            
-                      168 -       SET1    200     4975    THRU    5164                                            
-                      169 -       SET1    200     5182    THRU    5487                                            
-                      170 -       SET1    200     5489    THRU    5492                                            
-                      171 -       SET1    200     5494    THRU    5502                                            
-                      172 -       SET1    200     5504    THRU    5776                                            
-                      173 -       SET1    200     5795    THRU    5797                                            
-                      174 -       SET1    200     5799                                                            
-                      175 -       SET1    200     5818    THRU    6050                                            
-                      176 -       SET1    200     6052    THRU    6053                                            
-                      177 -       SET1    200     6062                                                            
-                      178 -       SET1    200     6064    THRU    6090                                            
-                      179 -       SET1    200     6107    THRU    6316                                            
-                      180 -       SET1    200     6320    THRU    6324                                            
-                      181 -       SET1    200     6351    THRU    6364                                            
-                      182 -       SET1    200     6367    THRU    6487                                            
-                      183 -       SET1    200     6490    THRU    6496                                            
-                      184 -       SET1    200     6509                                                            
-                      185 -       SET1    200     6515                                                            
-                      186 -       SET1    200     6520    THRU    6639                                            
-                      187 -       SET1    200     6641    THRU    6646                                            
-                      188 -       SET1    200     6659    THRU    6810                                            
-                      189 -       SET1    200     6817    THRU    6818                                            
-                      190 -       SET1    200     6821                                                            
-                      191 -       SET1    200     6840                                                            
-                      192 -       SET1    200     6849    THRU    7000                                            
-                      193 -       SET1    200     7004    THRU    7007                                            
-                      194 -       SET1    200     7020                                                            
-                      195 -       SET1    200     7026    THRU    7027                                            
-                      196 -       SET1    200     7032                                                            
-                      197 -       SET1    200     7046    THRU    7050                                            
-                      198 -       SET1    200     7054                                                            
-                      199 -       SET1    200     7065                                                            
-                      200 -       SET1    200     7071    THRU    7072                                            
-                      201 -       SET1    200     7077                                                            
-                      202 -       SET1    200     7091    THRU    7094                                            
-                      203 -       SET1    200     7107                                                            
-                      204 -       SET1    200     7113    THRU    7114                                            
-                      205 -       SET1    200     7119                                                            
-                      206 -       SET1    200     7133    THRU    7147                                            
-                      207 -       SET1    200     7150                                                            
-                      208 -       SET1    200     7153    THRU    7320                                            
-                      209 -       SET1    200     7339    THRU    7345                                            
-                      210 -       SET1    200     7364    THRU    7495                                            
-                      211 -       SET1    200     7497    THRU    7521                                            
-                      212 -       SET1    200     7523    THRU    7844                                            
-                      213 -       SET1    200     7863    THRU    7867                                            
-                      214 -       SET1    200     7869    THRU    8020                                            
-                      215 -       SET1    200     8038    THRU    8743                                            
-                      216 -       SET1    200     8745    THRU    8753                                            
-                      217 -       SET1    200     8755    THRU    9079                                            
-                      218 -       SET1    200     9081    THRU    9089                                            
-                      219 -       SET1    200     9091    THRU    9152                                            
-                      220 -       SET1    200     9160    THRU    9365                                            
-                      221 -       SET1    200     9367    THRU    9375                                            
-                      222 -       SET1    200     9377    THRU    9385                                            
-                      223 -       SET1    200     9387    THRU    9395                                            
-                      224 -       SET1    200     9397    THRU    9405                                            
-                      225 -       SET1    200     9407    THRU    9453                                            
-                      226 -       SET1    200     9466    THRU    10816                                           
-                      227 -       SET1    200     10824   THRU    11089                                           
-                      228 -       SET1    200     11112   THRU    11159                                           
-                      229 -       SET1    200     11174   THRU    11467                                           
-                      230 -       SET1    200     11469   THRU    11487                                           
-                      231 -       SET1    200     11528   THRU    11639                                           
-                      232 -       SET1    200     11664   THRU    11676                                           
-                      233 -       SET1    200     11697   THRU    11712                                           
-                      234 -       SET1    200     11721   THRU    11779                                           
-                      235 -       SET1    200     11781   THRU    12110                                           
-                      236 -       SET1    200     12132   THRU    12374                                           
-                      237 -       SET1    200     12394   THRU    12564                                           
-                      238 -       SET1    200     12596   THRU    12614                                           
-                      239 -       SET1    200     12625   THRU    12795                                           
-                      240 -       SET1    200     12827   THRU    12845                                           
-                      241 -       SET1    200     12856   THRU    13026                                           
-                      242 -       SET1    200     13058   THRU    13076                                           
-                      243 -       SET1    200     13087   THRU    15184                                           
-                      244 -       SET1    200     15196   THRU    15205                                           
-                      245 -       SET1    200     15207                                                           
-                      246 -       SET1    200     15218   THRU    16019                                           
-                      247 -       SET1    200     16025   THRU    16028                                           
-                      248 -       SET1    200     16035   THRU    16038                                           
-                      249 -       SET1    200     16045   THRU    16048                                           
-                      250 -       SET1    200     16055   THRU    16058                                           
-                      251 -       SET1    200     16065   THRU    16068                                           
-                      252 -       SET1    200     16075   THRU    16078                                           
-                      253 -       SET1    200     16085   THRU    16088                                           
-                      254 -       SET1    200     16095   THRU    16098                                           
-                      255 -       SET1    200     16105   THRU    16108                                           
-                      256 -       SET1    200     16115   THRU    16118                                           
-                      257 -       SET1    200     16125   THRU    16128                                           
-                      258 -       SET1    200     16135   THRU    16138                                           
-                      259 -       SET1    200     16145   THRU    16148                                           
-                      260 -       SET1    200     16155   THRU    16158                                           
-                      261 -       SET1    200     16165   THRU    16168                                           
-                      262 -       SET1    200     16175   THRU    16178                                           
-                      263 -       SET1    200     16185   THRU    16188                                           
-                      264 -       SET1    200     16195   THRU    16198                                           
-                      265 -       SET1    200     16204   THRU    16208                                           
-                      266 -       SET1    200     16210   THRU    16239                                           
-                      267 -       SET1    200     16430   THRU    16479                                           
-                      268 -       SET1    200     16670                                                           
-                      269 -       SET1    200     17107   THRU    17156                                           
-                      270 -       SET1    200     17347   THRU    17376                                           
-                      271 -       SET1    200     17567   THRU    17696                                           
-                      272 -       SET1    200     17711   THRU    17962                                           
-                      273 -       SET1    200     17977   THRU    18228                                           
-                      274 -       SET1    200     18243   THRU    18494                                           
-                      275 -       SET1    200     18509   THRU    18760                                           
-                      276 -       SET1    200     18817   THRU    19026                                           
-                      277 -       SET1    200     20092   THRU    20094                                           
-                      278 -       SET1    200     20139   THRU    20195                                           
-                      279 -       SET1    200     20221   THRU    20223                                           
-                      280 -       SET1    200     20244   THRU    20300                                           
-                      281 -       SET1    200     20302   THRU    20304                                           
-                      282 -       SET1    200     20349   THRU    20405                                           
-                      283 -       SET1    200     20431   THRU    20433                                           
-                      284 -       SET1    200     20454   THRU    20510                                           
-                      285 -       SET1    200     20512   THRU    20514                                           
-                      286 -       SET1    200     20559   THRU    20615                                           
-                      287 -       SET1    200     20641   THRU    20643                                           
-                      288 -       SET1    200     20664   THRU    20720                                           
-                      289 -       SET1    200     20722   THRU    20725                                           
-                      290 -       SET1    200     20728   THRU    20731                                           
-                      291 -       SET1    200     20734   THRU    20737                                           
-                      292 -       SET1    200     20740   THRU    20743                                           
-                      293 -       SET1    200     20746   THRU    20749                                           
-                      294 -       SET1    400     7498    1039    6818    1080    7184    1104                    
-                      295 -       SET1    500     20093   1111    8781    1355    20222   1655                    
-                      296 -       SET1    600     20303   1800    6494    2243    20432   2742                    
-                      297 -       SET1    700     20513   2827    3017    3456    20642   3780                    
-                      298 -       SPLINE1 10      WING1           1000    100     0.                              
-                      299 -       SPLINE1 21      WING21          2000    100     0.                              
-                      300 -       SPLINE1 22      WING22          2200    100     0.                              
-                      301 -       SPLINE1 23      WING23          2400    100     0.                              
-                      302 -       SPLINE1 24      WING24          2600    100     0.                              
-                      303 -       SPLINE1 30      WINGEXT         3000    100     0.                              
-                      304 -       SPLINE1 40      FLAP1           4000    400     0.                              
-                      305 -       SPLINE1 50      FLAP2           5000    500     0.                              
-                      306 -       SPLINE1 60      FLAP3           6000    600     0.                              
-                      307 -       SPLINE1 70      FLAP4           7000    700     0.                              
-                      308 -       SURFSET 350     CF1     CF2     CF3     CF4                                     
-                      309 -       ENDDATA
+                       17 -       APCNSND 11      1       2       1       -1      0                               
+                       18 -       APCONST 10      1       -1      -1      1       1       1       1               
+                       19 -       APCONST 11      1       -1      -1      1       2       1       1       +APG    
+                       20 -       +APG    8                                                                       
+                       21 -       ASE     100     250     100             170                                     
+                       22 -       ASECONT 250     350     900                                                     
+                       23 -       ASECONT 251     350     910                                                     
+                       24 -       ASEOUT  1001    100     1       AEMODEL         GUST25.0                        
+                       25 -       ASEOUT  1002    100     2       AEMODEL         GUST30.0                        
+                       26 -       ASEOUT  1003    100     3       AEMODEL         GUST35.0                        
+                       27 -       ASEOUT  1004    100     4       AEMODEL         GUST37.0                        
+                       28 -       ASEOUT  1005    100     5       AEMODEL         GUST39.0                        
+                       29 -       ASEOUT  1006    100     6       AEMODEL         GUST40.0                        
+                       30 -       ASEOUT  1007    100     7       AEMODEL         GUST42.0                        
+                       31 -       ASEOUT  1008    100     8       AEMODEL         GUST50.0                        
+                       32 -       ASESNSR 100     20      100                     NO                              
+                       33 -       ASESNSR 901     60      1                                                       
+                       34 -       ASESNSR 902     60      2                                                       
+                       35 -       ASESNSR 903     60      3                                                       
+                       36 -       CAERO7  1001    WING1           9       17              0       0       +C7W1   
+                       37 -       +C7W1   0.0     0.0     0.0     0.1     20                              +C7W2   
+                       38 -       +C7W2   0.0     0.12    0.0     0.1     20                                      
+                       39 -       CAERO7  2001    WING21          9       13              0       0       +C7W1   
+                       40 -       +C7W1   0.0     0.12    0.0     0.0682  10                              +C7W2   
+                       41 -       +C7W2   0.0     0.24    0.0     0.0682  10                                      
+                       42 -       CAERO7  2201    WING22          9       13              0       0       +C7W1   
+                       43 -       +C7W1   0.0     0.24    0.0     0.0682  10                              +C7W2   
+                       44 -       +C7W2   0.0     0.36    0.0     0.0682  10                                      
+                       45 -       CAERO7  2401    WING23          9       13              0       0       +C7W1   
+                       46 -       +C7W1   0.0     0.36    0.0     0.0682  10                              +C7W2   
+                       47 -       +C7W2   0.0     0.48    0.0     0.0682  10                                      
+                       48 -       CAERO7  2601    WING24          9       13              0       0       +C7W1   
+                       49 -       +C7W1   0.0     0.48    0.0     0.0682  10                              +C7W2   
+                       50 -       +C7W2   0.0     0.6     0.0     0.0682  10                                      
+                       51 -       CAERO7  3001    WINGEXT         3       17              0       0       +C7W1   
+                       52 -       +C7W1   0.0     0.6     0.0     0.1     20                              +C7W2   
+                       53 -       +C7W2   0.0     0.612   0.0     0.1     20                                      
+                       54 -       CAERO7  4001    FLAP1           9       5               0       0       +C7W1   
+                       55 -       +C7W1   0.0682  0.12    0.0     0.0318                                  +C7W2   
+                       56 -       +C7W2   0.0682  0.24    0.0     0.0318                                          
+                       57 -       CAERO7  5001    FLAP2           9       5               0       0       +C7W1   
+                       58 -       +C7W1   0.0682  0.24    0.0     0.0318                                  +C7W2   
+                       59 -       +C7W2   0.0682  0.36    0.0     0.0318                                          
+                       60 -       CAERO7  6001    FLAP3           9       5               0       0       +C7W1   
+                       61 -       +C7W1   0.0682  0.36    0.0     0.0318                                  +C7W2   
+                       62 -       +C7W2   0.0682  0.48    0.0     0.0318                                          
+                       63 -       CAERO7  7001    FLAP4           9       5               0       0       +C7W1   
+                       64 -       +C7W1   0.0682  0.48    0.0     0.0318                                  +C7W2   
+                       65 -       +C7W2   0.0682  0.6     0.0     0.0318                                          
+                       66 -       CGUST   10      DRYP    0.75    0.0285710.0     100.0   -0.01   0.7             
+                       67 -       CORD2R  401     0       0.0682  0.      0.      0.0682  0.6     0.      +CR11   
+                       68 -       +CR11   0.0682  0.6     0.005                                                   
+                       69 -       CROSPSD 101     MODALX  1               1                                       
+                       70 -       CROSPSD 102     MODALX  2               2                                       
+                       71 -       CROSPSD 103     MODALX  3               3                                       
+                       72 -       CROSPSD 104     MODALV  1               1                                       
+                       73 -       CROSPSD 105     MODALV  2               2                                       
+                       74 -       CROSPSD 106     MODALV  3               3                                       
+                       75 -       FIXMDEN 100     100     1.225   KG      M       1.0     0       1       +       
+                       76 -       +       35.0                                                                    
+                       77 -       FLUTTER 100     SYM     100     3       0                       30              
+                       78 -       FREQ1   300     0.0     0.01    10000                                           
+                       79 -       GENGUST 100     100     SYM     1       90.0    0.0     0.0     0       +GG1    
+                       80 -       +GG1    0.0                                                                     
+                       81 -       GLOADS  200     251     100     0               10              100     +GL     
+                       82 -       +GL     SAVE    FORMAT  QHGD5                                                   
+                       83 -       LOADMOD 100     XMOMENT         100     200                                     
+                       84 -       MINSTAT 170     120     100     10      0       0                       +BCA    
+                       85 -       +BCA    -2      SAVE    APPROX_ASE5.DAT         120                             
+                       86 -       MINSTAT 171     120     100     11      0       0                       +BCG    
+                       87 -       +BCG    -2      SAVE    APPROX_P5.DAT           120                             
+                       88 -       MKAEROZ 100     0.1028530       0       ACQU    AE_RBM_SYM.0            +MK1    
+                       89 -       +MK1    0.01    0.02    0.03    0.04    0.05    0.06    0.07    0.1     +MK2    
+                       90 -       +MK2    0.12    0.125   0.13    0.14    0.15    0.2     0.25    0.3     +MK3    
+                       91 -       +MK3    0.4     0.5     0.6     0.7     0.8     0.9     1.0     1.5             
+                       92 -       MLDPRNT 100     DRY5.PLT        TABLE   PSD     0.0     100.0   NO      +MP1    
+                       93 -       +MP1    MODALX  1       MODALX  2       MODALX  3       MODALV  1       +MP2    
+                       94 -       +MP2    MODALV  2       MODALV  3                                               
+                       95 -       MLDPRNT 100     DRYP5.P         TABLE   PSD     0.0     100.0   NO      +PS1    
+                       96 -       +PS1    CROSPSD 101     CROSPSD 102     CROSPSD 103     CROSPSD 104     +PS2    
+                       97 -       +PS2    CROSPSD 105     CROSPSD 106                                             
+                       98 -       OMITMOD SYMM                                                            +OMT    
+                       99 -       +OMT    3                                                                       
+                      100 -       PANLST1 1000    1001    1001    1128                                            
+                      101 -       PANLST1 2000    2001    2001    2096                                            
+                      102 -       PANLST1 2200    2201    2201    2296                                            
+                      103 -       PANLST1 2400    2401    2401    2496                                            
+                      104 -       PANLST1 2600    2601    2601    2696                                            
+                      105 -       PANLST1 3000    3001    3001    3032                                            
+                      106 -       PANLST1 4000    4001    4001    4032                                            
+                      107 -       PANLST1 5000    5001    5001    5032                                            
+                      108 -       PANLST1 6000    6001    6001    6032                                            
+                      109 -       PANLST1 7000    7001    7001    7032                                            
+                      110 -       PANLST3 100     WING1   WING21  WING22  WING23  WINGEXT FLAP1   FLAP2   +PAN1   
+                      111 -       +PAN1   FLAP3   FLAP4                                                           
+                      112 -       PLTMIST 10001   100     1       1                       QHH5I1J1.TXT            
+                      113 -       PLTMIST 10002   100     1       2                       QHH5I1J2.TXT            
+                      114 -       PLTMIST 10003   100     1       3                       QHH5I1J3.TXT            
+                      115 -       PLTMIST 10004   100     1       4                       QHC5I1J1.TXT            
+                      116 -       PLTMIST 10005   100     1       5                       QHC5I1J2.TXT            
+                      117 -       PLTMIST 10006   100     1       6                       QHC5I1J3.TXT            
+                      118 -       PLTMIST 10007   100     1       7                       QHC5I1J4.TXT            
+                      119 -       PLTMIST 10008   200     1       8                       QHG5I1J1.TXT            
+                      120 -       PLTMIST 10009   100     2       1                       QHH5I2J1.TXT            
+                      121 -       PLTMIST 10010   100     2       2                       QHH5I2J2.TXT            
+                      122 -       PLTMIST 10011   100     2       3                       QHH5I2J3.TXT            
+                      123 -       PLTMIST 10012   100     2       4                       QHC5I2J1.TXT            
+                      124 -       PLTMIST 10013   100     2       5                       QHC5I2J2.TXT            
+                      125 -       PLTMIST 10014   100     2       6                       QHC5I2J3.TXT            
+                      126 -       PLTMIST 10015   100     2       7                       QHC5I2J4.TXT            
+                      127 -       PLTMIST 10016   200     2       8                       QHG5I2J1.TXT            
+                      128 -       PLTMIST 10017   100     3       1                       QHH5I3J1.TXT            
+                      129 -       PLTMIST 10018   100     3       2                       QHH5I3J2.TXT            
+                      130 -       PLTMIST 10019   100     3       3                       QHH5I3J3.TXT            
+                      131 -       PLTMIST 10020   100     3       4                       QHC5I3J1.TXT            
+                      132 -       PLTMIST 10021   100     3       5                       QHC5I3J2.TXT            
+                      133 -       PLTMIST 10022   100     3       6                       QHC5I3J3.TXT            
+                      134 -       PLTMIST 10023   100     3       7                       QHC5I3J4.TXT            
+                      135 -       PLTMIST 10024   200     3       8                       QHG5I3J1.TXT            
+                      136 -       PLTVG   11      100     8       V               VG_P5.PLT                       
+                      137 -       SENSET  900     901     902     903     100                                     
+                      138 -       SENSET  910     901     902     903                                             
+                      139 -       SET1    100     53      284     316     1       54      381     353     +SE1    
+                      140 -       +SE1    22      71      448     433     43      1217    1276    1272    +SE2    
+                      141 -       +SE2    1268    1365    1369    1373    1377    92      519     1060    +SE3    
+                      142 -       +SE3    113     539     585     1512    1516    1520    1524    1659    +SE4    
+                      143 -       +SE4    1663    1667    1671    134     575     1132    155     632     +SE5    
+                      144 -       +SE5    617     1806    1810    1814    1818    1953    1957    1961    +SE6    
+                      145 -       +SE6    1965    176     720     1169    197     648     633     2100    +SE7    
+                      146 -       +SE7    2104    2108    2112    2247    2251    2255    2259    218     +SE8    
+                      147 -       +SE8    757     1185    239     824     809     2394    2398    2402    +SE9    
+                      148 -       +SE9    2406    2541    2545    2549    2553    48      260     884     +SE10   
+                      149 -       +SE10   869     44      9484    10774   9488                                    
+                      150 -       SET1    200     1       THRU    1046                                            
+                      151 -       SET1    200     1048    THRU    1251                                            
+                      152 -       SET1    200     1258    THRU    1358                                            
+                      153 -       SET1    200     1360    THRU    1527                                            
+                      154 -       SET1    200     1529    THRU    1945                                            
+                      155 -       SET1    200     1947    THRU    2095                                            
+                      156 -       SET1    200     2097    THRU    2534                                            
+                      157 -       SET1    200     2536    THRU    2687                                            
+                      158 -       SET1    200     2689    THRU    2951                                            
+                      159 -       SET1    200     2953    THRU    2975                                            
+                      160 -       SET1    200     2977    THRU    2980                                            
+                      161 -       SET1    200     2982    THRU    3011                                            
+                      162 -       SET1    200     3013    THRU    3017                                            
+                      163 -       SET1    200     3022                                                            
+                      164 -       SET1    200     3026    THRU    3140                                            
+                      165 -       SET1    200     3142    THRU    3242                                            
+                      166 -       SET1    200     3244    THRU    3557                                            
+                      167 -       SET1    200     3559    THRU    3686                                            
+                      168 -       SET1    200     3688    THRU    3856                                            
+                      169 -       SET1    200     3861    THRU    3874                                            
+                      170 -       SET1    200     3879    THRU    3920                                            
+                      171 -       SET1    200     3925    THRU    3934                                            
+                      172 -       SET1    200     3939    THRU    3978                                            
+                      173 -       SET1    200     3981    THRU    4025                                            
+                      174 -       SET1    200     4029    THRU    4052                                            
+                      175 -       SET1    200     4057    THRU    4088                                            
+                      176 -       SET1    200     4092    THRU    4121                                            
+                      177 -       SET1    200     4128    THRU    4157                                            
+                      178 -       SET1    200     4160    THRU    4218                                            
+                      179 -       SET1    200     4220    THRU    4224                                            
+                      180 -       SET1    200     4227    THRU    4272                                            
+                      181 -       SET1    200     4274    THRU    4354                                            
+                      182 -       SET1    200     4373    THRU    4375                                            
+                      183 -       SET1    200     4377                                                            
+                      184 -       SET1    200     4391    THRU    4540                                            
+                      185 -       SET1    200     4546    THRU    4551                                            
+                      186 -       SET1    200     4554    THRU    4555                                            
+                      187 -       SET1    200     4557                                                            
+                      188 -       SET1    200     4559    THRU    4738                                            
+                      189 -       SET1    200     4740    THRU    4744                                            
+                      190 -       SET1    200     4746    THRU    4948                                            
+                      191 -       SET1    200     4967    THRU    4973                                            
+                      192 -       SET1    200     4975    THRU    5164                                            
+                      193 -       SET1    200     5182    THRU    5487                                            
+                      194 -       SET1    200     5489    THRU    5492                                            
+                      195 -       SET1    200     5494    THRU    5502                                            
+                      196 -       SET1    200     5504    THRU    5776                                            
+                      197 -       SET1    200     5795    THRU    5797                                            
+                      198 -       SET1    200     5799                                                            
+                      199 -       SET1    200     5818    THRU    6050                                            
+                      200 -       SET1    200     6052    THRU    6053                                            
+                      201 -       SET1    200     6062                                                            
+                      202 -       SET1    200     6064    THRU    6090                                            
+                      203 -       SET1    200     6107    THRU    6316                                            
+                      204 -       SET1    200     6320    THRU    6324                                            
+                      205 -       SET1    200     6351    THRU    6364                                            
+                      206 -       SET1    200     6367    THRU    6487                                            
+                      207 -       SET1    200     6490    THRU    6496                                            
+                      208 -       SET1    200     6509                                                            
+                      209 -       SET1    200     6515                                                            
+                      210 -       SET1    200     6520    THRU    6639                                            
+                      211 -       SET1    200     6641    THRU    6646                                            
+                      212 -       SET1    200     6659    THRU    6810                                            
+                      213 -       SET1    200     6817    THRU    6818                                            
+                      214 -       SET1    200     6821                                                            
+                      215 -       SET1    200     6840                                                            
+                      216 -       SET1    200     6849    THRU    7000                                            
+                      217 -       SET1    200     7004    THRU    7007                                            
+                      218 -       SET1    200     7020                                                            
+                      219 -       SET1    200     7026    THRU    7027                                            
+                      220 -       SET1    200     7032                                                            
+                      221 -       SET1    200     7046    THRU    7050                                            
+                      222 -       SET1    200     7054                                                            
+                      223 -       SET1    200     7065                                                            
+                      224 -       SET1    200     7071    THRU    7072                                            
+                      225 -       SET1    200     7077                                                            
+                      226 -       SET1    200     7091    THRU    7094                                            
+                      227 -       SET1    200     7107                                                            
+                      228 -       SET1    200     7113    THRU    7114                                            
+                      229 -       SET1    200     7119                                                            
+                      230 -       SET1    200     7133    THRU    7147                                            
+                      231 -       SET1    200     7150                                                            
+                      232 -       SET1    200     7153    THRU    7320                                            
+                      233 -       SET1    200     7339    THRU    7345                                            
+                      234 -       SET1    200     7364    THRU    7495                                            
+                      235 -       SET1    200     7497    THRU    7521                                            
+                      236 -       SET1    200     7523    THRU    7844                                            
+                      237 -       SET1    200     7863    THRU    7867                                            
+                      238 -       SET1    200     7869    THRU    8020                                            
+                      239 -       SET1    200     8038    THRU    8743                                            
+                      240 -       SET1    200     8745    THRU    8753                                            
+                      241 -       SET1    200     8755    THRU    9079                                            
+                      242 -       SET1    200     9081    THRU    9089                                            
+                      243 -       SET1    200     9091    THRU    9152                                            
+                      244 -       SET1    200     9160    THRU    9365                                            
+                      245 -       SET1    200     9367    THRU    9375                                            
+                      246 -       SET1    200     9377    THRU    9385                                            
+                      247 -       SET1    200     9387    THRU    9395                                            
+                      248 -       SET1    200     9397    THRU    9405                                            
+                      249 -       SET1    200     9407    THRU    9453                                            
+                      250 -       SET1    200     9466    THRU    10816                                           
+                      251 -       SET1    200     10824   THRU    11089                                           
+                      252 -       SET1    200     11112   THRU    11159                                           
+                      253 -       SET1    200     11174   THRU    11467                                           
+                      254 -       SET1    200     11469   THRU    11487                                           
+                      255 -       SET1    200     11528   THRU    11639                                           
+                      256 -       SET1    200     11664   THRU    11676                                           
+                      257 -       SET1    200     11697   THRU    11712                                           
+                      258 -       SET1    200     11721   THRU    11779                                           
+                      259 -       SET1    200     11781   THRU    12110                                           
+                      260 -       SET1    200     12132   THRU    12374                                           
+                      261 -       SET1    200     12394   THRU    12564                                           
+                      262 -       SET1    200     12596   THRU    12614                                           
+                      263 -       SET1    200     12625   THRU    12795                                           
+                      264 -       SET1    200     12827   THRU    12845                                           
+                      265 -       SET1    200     12856   THRU    13026                                           
+                      266 -       SET1    200     13058   THRU    13076                                           
+                      267 -       SET1    200     13087   THRU    15184                                           
+                      268 -       SET1    200     15196   THRU    15205                                           
+                      269 -       SET1    200     15207                                                           
+                      270 -       SET1    200     15218   THRU    16019                                           
+                      271 -       SET1    200     16025   THRU    16028                                           
+                      272 -       SET1    200     16035   THRU    16038                                           
+                      273 -       SET1    200     16045   THRU    16048                                           
+                      274 -       SET1    200     16055   THRU    16058                                           
+                      275 -       SET1    200     16065   THRU    16068                                           
+                      276 -       SET1    200     16075   THRU    16078                                           
+                      277 -       SET1    200     16085   THRU    16088                                           
+                      278 -       SET1    200     16095   THRU    16098                                           
+                      279 -       SET1    200     16105   THRU    16108                                           
+                      280 -       SET1    200     16115   THRU    16118                                           
+                      281 -       SET1    200     16125   THRU    16128                                           
+                      282 -       SET1    200     16135   THRU    16138                                           
+                      283 -       SET1    200     16145   THRU    16148                                           
+                      284 -       SET1    200     16155   THRU    16158                                           
+                      285 -       SET1    200     16165   THRU    16168                                           
+                      286 -       SET1    200     16175   THRU    16178                                           
+                      287 -       SET1    200     16185   THRU    16188                                           
+                      288 -       SET1    200     16195   THRU    16198                                           
+                      289 -       SET1    200     16204   THRU    16208                                           
+                      290 -       SET1    200     16210   THRU    16239                                           
+                      291 -       SET1    200     16430   THRU    16479                                           
+                      292 -       SET1    200     16670                                                           
+                      293 -       SET1    200     17107   THRU    17156                                           
+                      294 -       SET1    200     17347   THRU    17376                                           
+                      295 -       SET1    200     17567   THRU    17696                                           
+                      296 -       SET1    200     17711   THRU    17962                                           
+                      297 -       SET1    200     17977   THRU    18228                                           
+                      298 -       SET1    200     18243   THRU    18494                                           
+                      299 -       SET1    200     18509   THRU    18760                                           
+                      300 -       SET1    200     18817   THRU    19026                                           
+                      301 -       SET1    200     20092   THRU    20094                                           
+                      302 -       SET1    200     20139   THRU    20195                                           
+                      303 -       SET1    200     20221   THRU    20223                                           
+                      304 -       SET1    200     20244   THRU    20300                                           
+                      305 -       SET1    200     20302   THRU    20304                                           
+                      306 -       SET1    200     20349   THRU    20405                                           
+                      307 -       SET1    200     20431   THRU    20433                                           
+                      308 -       SET1    200     20454   THRU    20510                                           
+                      309 -       SET1    200     20512   THRU    20514                                           
+                      310 -       SET1    200     20559   THRU    20615                                           
+                      311 -       SET1    200     20641   THRU    20643                                           
+                      312 -       SET1    200     20664   THRU    20720                                           
+                      313 -       SET1    200     20722   THRU    20725                                           
+                      314 -       SET1    200     20728   THRU    20731                                           
+                      315 -       SET1    200     20734   THRU    20737                                           
+                      316 -       SET1    200     20740   THRU    20743                                           
+                      317 -       SET1    200     20746   THRU    20749                                           
+                      318 -       SET1    400     7498    1039    6818    1080    7184    1104                    
+                      319 -       SET1    500     20093   1111    8781    1355    20222   1655                    
+                      320 -       SET1    600     20303   1800    6494    2243    20432   2742                    
+                      321 -       SET1    700     20513   2827    3017    3456    20642   3780                    
+                      322 -       SPLINE1 10      WING1           1000    100     0.                              
+                      323 -       SPLINE1 21      WING21          2000    100     0.                              
+                      324 -       SPLINE1 22      WING22          2200    100     0.                              
+                      325 -       SPLINE1 23      WING23          2400    100     0.                              
+                      326 -       SPLINE1 24      WING24          2600    100     0.                              
+                      327 -       SPLINE1 30      WINGEXT         3000    100     0.                              
+                      328 -       SPLINE1 40      FLAP1           4000    400     0.                              
+                      329 -       SPLINE1 50      FLAP2           5000    500     0.                              
+                      330 -       SPLINE1 60      FLAP3           6000    600     0.                              
+                      331 -       SPLINE1 70      FLAP4           7000    700     0.                              
+                      332 -       SURFSET 350     CF1     CF2     CF3     CF4                                     
+                      333 -       ENDDATA
 
 
 
@@ -31147,11 +31171,8 @@
 
       USING MODIFIED MINIMUM STATE METHOD WITH UNIFORM WEIGHTING
 
-      THE SIZE OF [R] MATRIX (NUMBER OF AERODYNAMIC LAG ROOTS)=    20
-      AERODYNAMIC LAG ROOTS:       -5.7823E-03  -2.3129E-02  -5.2041E-02  -9.2517E-02  -1.4456E-01  -2.0816E-01
-                                   -2.8333E-01  -3.7007E-01  -4.6837E-01  -5.7823E-01  -6.9966E-01  -8.3265E-01
-                                   -9.7721E-01  -1.1333E+00  -1.3010E+00  -1.4803E+00  -1.6711E+00  -1.8735E+00
-                                   -2.0874E+00  -2.3129E+00
+      THE SIZE OF [R] MATRIX (NUMBER OF AERODYNAMIC LAG ROOTS)=     5
+      AERODYNAMIC LAG ROOTS:       -7.0833E-02  -2.8333E-01  -6.3750E-01  -1.1333E+00  -1.7708E+00
  
 
 
@@ -31170,57 +31191,57 @@
         DA1 ROW-WISE SETTINGS: 
                                             -1
         DA2 ROW-WISE SETTINGS: 
-                                             0
+                                            -1
  
 
 
                      * * * * * D-E AND E-D CONVERGENCE HISTORY: AAAAA==D-E ITERATIONS, BBBBBB==E-D ITERATIONS * * * * *
- 2.00E+00+                                                                                                                        
+ 5.00E+00+                                                                                                                        
+         |                                                                                                                        
+         |                                                                                                                        
          |                                                                                                                        
          |A                                                                                                                       
          |                                                                                                                        
          |                                                                                                                        
          |                                                                                                                        
+ 4.00E+00+                                                                                                                        
          |                                                                                                                        
          |                                                                                                                        
          |                                                                                                                        
+         |                                                                                                                        
+         |                                                                                                                        
+         |                                                                                                                        
+         |                                                                                                                        
+ 3.00E+00+                                                                                                                        
+         |                                                                                                                        
+         |                                                                                                                        
+         |                                                                                                                        
+         |                                                                                                                        
+         |                                                                                                                        
+         |                                                                                                                        
+         |                                                                                                                        
+ 2.00E+00+                                                                                                                        
+         |                                                                                                                        
+         |                                                                                                                        
+         |                                                                                                                        
+         |                                                                                                                        
+         |                                                                                                                        
+         |                                                                                                                        
+         |                                                                                                                        
+ 1.00E+00+                                                                                                                        
          |                                                                                                                        
          |B                                                                                                                       
          |                                                                                                                        
-         |                                                                                                                        
-         |                                                                                                                        
-         |                                                                                                                        
-         |                                                                                                                        
-         |                                                                                                                        
-         | A                                                                                                                      
-         |                                                                                                                        
          | B                                                                                                                      
- 1.00E+00+                                                                                                                        
-         |   A                                                                                                                    
-         |   B                                                                                                                    
-         |    B                                                                                                                   
-         |     BB                                                                                                                 
-         |       B BBBBBB BB                                                                                                      
-         |                  BBB BBBBB BBBBBB BBBBB BBBBB BBBBBB BA                                                                
-         |                                                       BBBB BBBBB BBBBBB BBBBB BBBBB BBBBBB BBBBB BBBBB                 
-         |                                                                                                        BBBBBB BBBBB BB 
-         |                                                                                                                        
-         |                                                                                                                        
-         |                                                                                                                        
-         |                                                                                                                        
-         |                                                                                                                        
-         |                                                                                                                        
-         |                                                                                                                        
-         |                                                                                                                        
-         |                                                                                                                        
-         |                                                                                                                        
-         |                                                                                                                        
+         |   BA                                                                                                                   
+         |    BBBB BBBBBB BBBBB BBBBB BBBBBB BBBBB BBBBB BBBBBB BBBBB BBBBB BBBBBB BBBBB A                                        
+         |                                                                               BBBBB BBBBBB BBBBB BBBBB BBBBBB BBBBB BB 
  0.00E+00+-----------+-----------+-----------+-----------+-----------+-----------+-----------+-----------+-----------+-----------+
                                                    NUMBER OF ITERATIONS=     100
-                                         INITIAL ERROR= 1.9068E+00, FINAL ERROR= 6.1793E-01
+                                         INITIAL ERROR= 4.4727E+00, FINAL ERROR= 1.6865E-01
 
 
-      * * * RATIONAL AERODYNAMIC APPROXIMATION MATRICES WERE SAVED ON FILE APPROX.DAT                                                                      
+      * * * RATIONAL AERODYNAMIC APPROXIMATION MATRICES WERE SAVED ON FILE APPROX_ASE5.DAT                                                                 
 
 
 
@@ -31238,71 +31259,37 @@
 
  * * * MATRIX A1: ROWS=       3, COLUMNS=       7
                      1           2           3           4           5           6           7
-       1    5.5716E+01 -1.7075E+01  4.2456E+01 -1.7174E-02 -4.1278E-02 -6.6693E-02 -8.2541E-02
-       2    1.8157E+00  9.8327E+00 -4.9763E+00  1.8896E-02  2.6282E-02  2.8009E-02  2.4955E-02
-       3    3.6100E+01 -2.0725E+01  8.7493E+01 -6.8884E-02 -1.0508E-01 -7.8513E-02  2.5624E-03
+       1    8.6322E+00 -1.4440E+01  6.6225E+00 -1.3805E-02 -2.4186E-02 -3.6807E-02 -4.6602E-02
+       2    4.0233E+00  3.4036E+00  2.0492E+00  1.0914E-02  1.4791E-02  1.5661E-02  1.4475E-02
+       3    6.7869E+00 -1.2756E+01  1.4712E+01 -4.5896E-02 -6.0280E-02 -4.1277E-02  3.0517E-03
 
  * * * MATRIX A2: ROWS=       3, COLUMNS=       7
                      1           2           3           4           5           6           7
-       1    0.0000E+00  0.0000E+00  0.0000E+00  0.0000E+00  0.0000E+00  0.0000E+00  0.0000E+00
-       2    0.0000E+00  0.0000E+00  0.0000E+00  0.0000E+00  0.0000E+00  0.0000E+00  0.0000E+00
-       3    0.0000E+00  0.0000E+00  0.0000E+00  0.0000E+00  0.0000E+00  0.0000E+00  0.0000E+00
+       1    7.3926E+00 -2.7361E-01  4.2738E+00  1.3667E-04 -1.7843E-03 -4.4475E-03 -6.5284E-03
+       2   -3.9806E-01  1.5106E+00 -1.2345E+00  1.1176E-03  2.0679E-03  2.6559E-03  2.6837E-03
+       3    4.2088E+00 -9.4465E-01  1.0631E+01 -2.6216E-03 -6.2315E-03 -5.3612E-03  1.3550E-04
 
- * * * MATRIX D:  ROWS=       3, COLUMNS=      20
-                     1           2           3           4           5           6           7           8           9          10
-       1   -1.1676E-01 -5.4434E-02 -1.1937E+00  3.5964E+00 -6.5310E+00  3.8847E-01  2.4615E+00 -1.2709E+01 -8.4158E-01  3.3932E+00
-       2   -4.7636E-01 -2.1751E-01 -3.0796E-01  2.1014E+00 -4.9343E+00  2.4625E-01  1.6780E+00 -6.9839E+00 -3.2876E-01  1.2660E+00
-       3   -9.2630E-01  7.4013E+00 -1.4204E+00  3.2815E+00 -6.7380E+00  3.4652E-01  3.3786E+00 -1.9007E+01 -3.7455E-01  3.0383E+00
-                    11          12          13          14          15          16          17          18          19          20
-       1   -7.2421E+00 -6.6967E-01  3.0408E+00 -5.0247E+00 -3.5583E-01  2.3721E+00 -3.4308E+00 -1.5362E-01  1.8901E+00 -2.4168E+00
-       2   -2.4670E+00  5.1754E-02  3.8128E-01 -9.7616E-01  2.3085E-01 -5.6445E-03 -2.4717E-01  2.7370E-01 -1.2475E-01  1.7868E-01
-       3   -8.5459E+00  1.5407E-01  1.5872E+00 -5.3366E+00  5.0551E-01  8.6561E-01 -3.6520E+00  6.7955E-01  5.2745E-01 -2.6626E+00
+ * * * MATRIX D:  ROWS=       3, COLUMNS=       5
+                     1           2           3           4           5
+       1    4.8540E-01  9.6283E-01  3.0103E-02  3.7693E-01  3.3998E+00
+       2    2.6464E-01  5.3181E-01 -6.4465E-04  9.9749E-02  5.1150E-01
+       3    6.9508E-01  1.3865E+00  1.6928E-01  5.7215E-01  4.9770E+00
 
- * * * MATRIX E:  ROWS=      20, COLUMNS=       7
+ * * * MATRIX E:  ROWS=       5, COLUMNS=       7
                      1           2           3           4           5           6           7
-       1    2.8965E-02  2.6538E-02  2.0057E-02  2.7955E-04  2.1344E-04  1.3384E-04  4.7081E-05
-       2    1.9694E-02  9.3075E-03 -1.2314E-02  1.2037E-04  9.9734E-05  6.0080E-05  2.2185E-06
-       3    5.0220E-01 -2.1358E-01 -1.6479E-01 -2.1971E-04 -3.5117E-04 -7.6198E-04 -1.3322E-03
-       4    8.4908E-01  2.4467E-03 -3.4763E-01  1.7299E-03  1.3615E-03  4.1682E-04 -1.0317E-03
-       5    8.5432E-01 -1.3923E-01 -8.1318E-01  6.9455E-04  5.3328E-04 -4.1309E-04 -1.9767E-03
-       6   -5.8825E+00 -2.2811E+00 -2.7618E+01 -1.4847E-02 -6.5351E-03 -1.0348E-02 -2.3971E-02
-       7    9.8839E+00  1.2198E+00 -5.7914E+00  1.6555E-02  1.4387E-02  4.8457E-03 -1.1375E-02
-       8    2.0023E+00  5.3841E-03 -4.1814E+00  2.1221E-03  2.4938E-03 -7.6024E-05 -5.3139E-03
-       9   -4.5441E+01  1.0084E+01 -2.0432E+02  6.4997E-02  9.8561E-02  4.1287E-02 -9.2701E-02
-      10   -7.0877E+01  2.9296E+00 -2.0332E+02  1.8129E-02  6.6743E-02  3.6531E-02 -6.9110E-02
-      11   -5.1693E+01 -7.3662E-01 -7.9567E+01 -8.1355E-03  1.4950E-02  1.7658E-02 -2.6556E-03
-      12   -1.3566E+02 -1.0922E+02  3.1529E+02 -4.4812E-01 -4.5722E-01 -2.2981E-01  1.7014E-01
-      13   -3.3899E+00 -7.3454E+01  5.2511E+02 -3.3598E-01 -4.1962E-01 -2.0359E-01  2.5060E-01
-      14    1.7277E+02 -2.6081E+01  4.1408E+02 -1.2165E-01 -2.1677E-01 -1.5010E-01  5.9848E-02
-      15    6.0770E+02  2.1667E+02  3.8837E+02  4.9406E-01  3.4915E-01  1.9214E-01  5.7371E-02
-      16    3.7099E+02  1.8781E+02 -4.9126E+02  6.0834E-01  6.5849E-01  2.9268E-01 -3.9276E-01
-      17   -2.5203E+02  1.1308E+02 -8.5209E+02  3.9656E-01  5.8426E-01  4.0186E-01 -1.0389E-01
-      18   -5.3823E+02 -1.2125E+02 -7.5927E+02 -7.3316E-02  1.0417E-01  6.2196E-02 -1.9210E-01
-      19   -4.5959E+02 -1.3860E+02  7.6947E+01 -3.4695E-01 -3.2883E-01 -9.0825E-02  2.9767E-01
-      20    1.3690E+02 -1.2071E+02  6.0753E+02 -3.4318E-01 -4.8201E-01 -3.4153E-01  3.9750E-02
+       1    4.8872E-02  1.1156E+00 -8.9071E-02  7.0997E-03  6.1907E-03  5.0352E-03  3.5063E-03
+       2    4.8897E-01  2.2802E+00  1.6148E-01  1.1229E-02  1.2356E-02  1.2142E-02  8.5076E-03
+       3   -5.7037E+00 -5.2321E+00  2.1220E-01  7.8932E-02  2.5304E-02 -5.4221E-02 -8.0877E-02
+       4    1.1031E+01  8.7032E-01  9.8429E+00 -7.6183E-02 -1.9388E-02  4.0490E-02  5.2300E-02
+       5   -1.9661E+00  4.5474E-01 -2.1000E+00  1.1730E-02  4.5715E-03 -3.2014E-03 -5.3295E-03
 
- * * * DIAGONAL MATRIX R IS PRINTED OUT AS A COLUMN VECTOR: ROWS=      20, COLUMNS=       1
+ * * * DIAGONAL MATRIX R IS PRINTED OUT AS A COLUMN VECTOR: ROWS=       5, COLUMNS=       1
                      1
-       1   -5.7823E-03
-       2   -2.3129E-02
-       3   -5.2041E-02
-       4   -9.2517E-02
-       5   -1.4456E-01
-       6   -2.0816E-01
-       7   -2.8333E-01
-       8   -3.7007E-01
-       9   -4.6837E-01
-      10   -5.7823E-01
-      11   -6.9966E-01
-      12   -8.3265E-01
-      13   -9.7721E-01
-      14   -1.1333E+00
-      15   -1.3010E+00
-      16   -1.4803E+00
-      17   -1.6711E+00
-      18   -1.8735E+00
-      19   -2.0874E+00
-      20   -2.3129E+00
+       1   -7.0833E-02
+       2   -2.8333E-01
+       3   -6.3750E-01
+       4   -1.1333E+00
+       5   -1.7708E+00
  
  
 
@@ -31310,7 +31297,7 @@
   CONSTRUCTION OF STATE SPACE EQUATIONS OF AEROELASTIC MODEL, OUTPUT EQUATION, ACTUATOR MODEL, PLANT MODEL, AND CLOSED-LOOP MODEL
 
       AEROELASTIC MODEL: D/DT{XAE}=[AAE]{XAE}+[BAE]{U}
-      WHERE {XAE} CONSISTS OF      6 STRUCTURAL STATES AND    20 AERODYNAMIC LAG STATES
+      WHERE {XAE} CONSISTS OF      6 STRUCTURAL STATES AND     5 AERODYNAMIC LAG STATES
 
       OUTPUT EQUATION: {Y}=[CAE]{XAE}+[DAE]{U} WHERE {Y} CONSISTS OF     4 SENSORS
 
@@ -31323,7 +31310,7 @@
       NUMBER OF GRID POINT FORCES:     0
 
       PLANT STATE SPACE MODEL: D/DT{XPLN}=[APLN]{XPLN}+[BPLN]{U}  OR [[APLN]-S*[I]]{XPLN}=0 FOR STABILITY ANALYSIS
-      WHERE {XPLN}= TRANSPOSE[{XAE},{XACT}], NUMBER OF STATES=      38
+      WHERE {XPLN}= TRANSPOSE[{XAE},{XACT}], NUMBER OF STATES=      23
 
                                                                                                                                     
  NON-MATCHED POINT FLUTTER ANALYSIS RESULTING FROM BULK DATA CARD FIXMDEN ID=     100                                               
@@ -31336,7 +31323,7 @@
  MASS   UNIT IS CONVERTED FROM   N/     OF THE FEM MODEL TO   KG     OF THE ASE ANALYSIS                                            
                                                                                                                                     
                                                                                                                                     
- THE FOLLOWING V-G-F TABLE LISTS    3 NUMBER OF STRUCTURAL MODES (  1 -  3 ) AND   22 NUMBER OF AERODYNAMIC LAG ROOTS (  4 - 25 )   
+ THE FOLLOWING V-G-F TABLE LISTS    3 NUMBER OF STRUCTURAL MODES (  1 -  3 ) AND   13 NUMBER OF AERODYNAMIC LAG ROOTS (  4 - 16 )   
                                                                                                                                     
                                                                                                                                     
                                                SUMMARY     MODES  1 -  4                                                            
@@ -31346,7 +31333,7 @@
              SEC   M /S**2     MODAL DAMPING= 0.00%     MODAL DAMPING= 0.00%     MODAL DAMPING= 0.00%                               
    V/VREF        V    DYN P         G   F(HZ) K=WL/V         G   F(HZ) K=WL/V         G   F(HZ) K=WL/V         G   F(HZ) K=WL/V     
    0.0000 0.000+00 0.000+00    0.0000   4.474 INFINT    0.0000  18.673 INFINT    0.0000  29.608 INFINT    0.0000   0.000 INFINT     
-  35.0000 3.500+01 7.503+02   -0.5810   5.137 0.0461   -0.0360  15.059 0.1351   -0.0737  30.349 0.2724   -0.0169   0.000 0.0000     
+  35.0000 3.500+01 7.503+02   -0.5375   5.178 0.0464   -0.0363  15.044 0.1350   -0.0747  30.346 0.2723   -0.1978   0.000 0.0000     
                                                                                                                                     
                                                                                                                                     
                                                SUMMARY     MODES  5 -  8                                                            
@@ -31356,7 +31343,7 @@
              SEC   M /S**2                                                                                                          
    V/VREF        V    DYN P         G   F(HZ) K=WL/V         G   F(HZ) K=WL/V         G   F(HZ) K=WL/V         G   F(HZ) K=WL/V     
    0.0000 0.000+00 0.000+00    0.0000   0.000 INFINT    0.0000   0.000 INFINT    0.0000   0.000 INFINT    0.0000   0.000 INFINT     
-  35.0000 3.500+01 7.503+02   -0.0673   0.000 0.0000   -5.7650   2.242 0.0201   -1.7664   7.824 0.0702   -1.7664   7.824 0.0702     
+  35.0000 3.500+01 7.503+02   -1.7664   7.824 0.0702   -1.7664   7.824 0.0702   -1.7664   7.824 0.0702   -1.7664   7.824 0.0702     
                                                                                                                                     
                                                                                                                                     
                                                SUMMARY     MODES  9 - 12                                                            
@@ -31366,7 +31353,7 @@
              SEC   M /S**2                                                                                                          
    V/VREF        V    DYN P         G   F(HZ) K=WL/V         G   F(HZ) K=WL/V         G   F(HZ) K=WL/V         G   F(HZ) K=WL/V     
    0.0000 0.000+00 0.000+00    0.0000   0.000 INFINT    0.0000   0.000 INFINT    0.0000   0.000 INFINT    0.0000   0.000 INFINT     
-  35.0000 3.500+01 7.503+02   -1.7664   7.824 0.0702   -1.7664   7.824 0.0702   -0.4770   0.000 0.0000   -5.7551   8.430 0.0756     
+  35.0000 3.500+01 7.503+02   -0.7903   0.000 0.0000   -1.8405   0.000 0.0000   -2.0608   0.000 0.0000   -2.0608   0.000 0.0000     
                                                                                                                                     
                                                                                                                                     
                                                SUMMARY     MODES 13 - 16                                                            
@@ -31376,37 +31363,7 @@
              SEC   M /S**2                                                                                                          
    V/VREF        V    DYN P         G   F(HZ) K=WL/V         G   F(HZ) K=WL/V         G   F(HZ) K=WL/V         G   F(HZ) K=WL/V     
    0.0000 0.000+00 0.000+00    0.0000   0.000 INFINT    0.0000   0.000 INFINT    0.0000   0.000 INFINT    0.0000   0.000 INFINT     
-  35.0000 3.500+01 7.503+02  -17.0971   4.983 0.0447   -3.9405  31.749 0.2849   -2.0608   0.000 0.0000   -2.0608   0.000 0.0000     
-                                                                                                                                    
-                                                                                                                                    
-                                               SUMMARY     MODES 17 - 20                                                            
-                                                                                                                                    
-   UNITS    UNITS    UNITS          MODE NO. 17              MODE NO. 18              MODE NO. 19              MODE NO. 20          
-    NONE     M /   KG  /        AERODYNAMIC LAG          AERODYNAMIC LAG          AERODYNAMIC LAG          AERODYNAMIC LAG          
-             SEC   M /S**2                                                                                                          
-   V/VREF        V    DYN P         G   F(HZ) K=WL/V         G   F(HZ) K=WL/V         G   F(HZ) K=WL/V         G   F(HZ) K=WL/V     
-   0.0000 0.000+00 0.000+00    0.0000   0.000 INFINT    0.0000   0.000 INFINT    0.0000   0.000 INFINT    0.0000   0.000 INFINT     
-  35.0000 3.500+01 7.503+02   -2.0608   0.000 0.0000   -2.0608   0.000 0.0000   -2.1706   0.000 0.0000   -3.3554   0.000 0.0000     
-                                                                                                                                    
-                                                                                                                                    
-                                               SUMMARY     MODES 21 - 24                                                            
-                                                                                                                                    
-   UNITS    UNITS    UNITS          MODE NO. 21              MODE NO. 22              MODE NO. 23              MODE NO. 24          
-    NONE     M /   KG  /        AERODYNAMIC LAG          AERODYNAMIC LAG          AERODYNAMIC LAG          AERODYNAMIC LAG          
-             SEC   M /S**2                                                                                                          
-   V/VREF        V    DYN P         G   F(HZ) K=WL/V         G   F(HZ) K=WL/V         G   F(HZ) K=WL/V         G   F(HZ) K=WL/V     
-   0.0000 0.000+00 0.000+00    0.0000   0.000 INFINT    0.0000   0.000 INFINT    0.0000   0.000 INFINT    0.0000   0.000 INFINT     
-  35.0000 3.500+01 7.503+02  -10.8175  25.142 0.2256   -3.9837  72.812 0.6535   -5.5204   0.000 0.0000   -6.6983   0.000 0.0000     
-                                                                                                                                    
-                                                                                                                                    
-                                               SUMMARY     MODES 25 - 25                                                            
-                                                                                                                                    
-   UNITS    UNITS    UNITS          MODE NO. 25              MODE NO.                                                               
-    NONE     M /   KG  /        AERODYNAMIC LAG                                                                                     
-             SEC   M /S**2                                                                                                          
-   V/VREF        V    DYN P         G   F(HZ) K=WL/V         G   F(HZ) K=WL/V         G   F(HZ) K=WL/V         G   F(HZ) K=WL/V     
-   0.0000 0.000+00 0.000+00    0.0000   0.000 INFINT                                                                                
-  35.0000 3.500+01 7.503+02   -8.5107   0.000 0.0000                                                                                
+  35.0000 3.500+01 7.503+02   -2.0608   0.000 0.0000   -2.0608   0.000 0.0000   -3.2336   0.000 0.0000   -5.1500   0.000 0.0000     
                                                                                                                                     
  NON-MATCHED POINT FLUTTER ANALYSIS RESULTING FROM BULK DATA CARD FIXMDEN ID=     100                                               
  MACH =  0.1029, DENSITY= 1.2250E+00 (KG  /M **3  ), REFERENCE LENGTH (L) = 1.0000E-01/2.0 (M ), VREF= 1.0000E+00 (M /SEC)          
@@ -31448,17 +31405,17 @@
         |                                                                                                                           
         |                                                                                                                           
         |                                                                                                                           
-        |                                                                                                            J              
+        |                                                                                                            H              
+        |                                                                                                                           
+        |                                                                                                                           
+        |                                                                                                            A              
+        A                                                                                                                           
         |                                                                                                                           
         |                                                                                                                           
         |                                                                                                                           
-        A                                                                                                            A              
         |                                                                                                                           
         |                                                                                                                           
-        |                                                                                                            F              
-        |                                                                                                                           
-        |                                                                                                                           
-    0.0 J-----------+-----------+-----------+-----------+-----------+-----------+-----------+-----------+-----------+E----------+   
+    0.0 J-----------+-----------+-----------+-----------+-----------+-----------+-----------+-----------+-----------+J----------+   
         0.0         0.1         0.2         0.3         0.4         0.5         0.6         0.7         0.8         0.9         1.  
                                                           V E L O C I T Y     ( X 3.850E+01 )  ( UNITS=  M /  SEC  )                
                                                                                                                                     
@@ -31467,11 +31424,11 @@
             * * * *  D A M P I N G   V E R S U S      V E L O C I T Y       F O R   T H E   F I R S T   10   M O D E S * * * *      
                                                                                                                                     
     0.0 J-----------+-----------+-----------+-----------+-----------+-----------+-----------+-----------+-----------+-----------+   
-        |                                                                                                            D              
+        |                                                                                                                           
         |                                                                                                                           
         |                                                                                                            B              
         |                                                                                                                           
-        |                                                                                                            E              
+        |                                                                                                                           
         |                                                                                                            C              
    -0.1 +                                                                                                                           
         |                                                                                                                           
@@ -31482,7 +31439,7 @@
         |                                                                                                                           
         |                                                                                                                           
    -0.2 +                                                                                                                           
-        |                                                                                                                           
+        |                                                                                                            D              
         |                                                                                                                           
         |                                                                                                                           
         |                                                                                                                           
@@ -31811,7 +31768,7 @@
                                              ****************************************
 
           TITLE   =         ASSURE_WING                                                             
-          SUBTITLE=         CONTINUOUS DRYDEN GUST ANALYSIS                                         
+          SUBTITLE=         CONTINUOUS DRYDEN GUST AT 35 M/S                                        
           LABEL   =                                                                                 
 
 
@@ -41915,7 +41872,7 @@
           DYNAMIC PRESSURE= 0.75031E+03 (KG  /M /S**2), GRAVITY=  0.0000E+00 (  M /  SEC  /SEC ), INITIAL LOAD FACTOR=  0.0000
 
           TITLE   =         ASSURE_WING                                                             
-          SUBTITLE=         CONTINUOUS DRYDEN GUST ANALYSIS                                         
+          SUBTITLE=         CONTINUOUS DRYDEN GUST AT 35 M/S                                        
           LABEL   =                                                                                 
 
 
@@ -41942,7 +41899,7 @@
 
  * * *  T R A N S F E R   F U N C T I O N   V.S.   F R E Q   F O R   B U L K   D A T A   M L D P R N T   I D  =      100  * * *
       STARTING FREQ = 0.00000E+00Hz, ENDING FREQ = 0.10000E+03HZ, DELTA FREQ= 0.10000E-01HZ
-      DATA IS EXPORTED TO ASCII FILE: DRY.PLT                                                         
+      DATA IS EXPORTED TO ASCII FILE: DRY5.PLT                                                        
 
 
      * *   L A B E L =RE(MODALV  ),  I K E Y =       1,  R M S   V A L U E  = 0.12153E+01,  M E T H O D  =  M D   * *   
@@ -42272,7 +42229,7 @@
 
  * * *  T R A N S F E R   F U N C T I O N   V.S.   F R E Q   F O R   B U L K   D A T A   M L D P R N T   I D  =      100  * * *
       STARTING FREQ = 0.00000E+00Hz, ENDING FREQ = 0.10000E+03HZ, DELTA FREQ= 0.10000E-01HZ
-      DATA IS EXPORTED TO ASCII FILE: DRYPSD.P                                                        
+      DATA IS EXPORTED TO ASCII FILE: DRYP5.P                                                         
 
 
      * *   L A B E L =RE(CROSPSD ),  I K E Y =     101,  R M S   V A L U E  = 0.59418E-02,  M E T H O D  =  M D   * *   
@@ -42714,6 +42671,6 @@
                                              ***                                  ***
                                              ***          N O R M A L L Y         ***
                                              ***                                  ***
-                                             ***      20:44:22    10/09/2026      ***
+                                             ***      13:50:04    11/18/2026      ***
                                              ***                                  ***
                                              ****************************************

@@ -1,5 +1,5 @@
 function zaero = load_zaero_dryden_psd(filename)
-%LOAD_ZAERO_DRYDEN_PSD Read modal-response PSDs from ZAERO DRYPSD.P.
+%LOAD_ZAERO_DRYDEN_PSD Read ZAERO modal-response PSD reference data.
 %
 % The current ZAERO output is expected to contain six auto-PSD CROSPSD
 % results:
@@ -28,7 +28,7 @@ function zaero = load_zaero_dryden_psd(filename)
 %   RMS = sqrt(2 * integral_0^Fmax PSD(f) df)
 
 arguments
-    filename (1,:) char = 'DRYPSD.P'
+    filename (1,:) char = 'DRYDEN_MODAL_PSD.P'
 end
 
 if ~isfile(filename)

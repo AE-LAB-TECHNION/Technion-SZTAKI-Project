@@ -103,7 +103,8 @@ for mode_id = 1:cfg.Nel
 
         currentSys = sys_xi_mode(:, cs_id);
 
-        fig = figure;
+        fig = figure('Name', sprintf('Bode CS %d to Mode %d', cs_id, mode_id), ...
+            'NumberTitle', 'off');
         apply_plot_style(fig, cfg);
 
         plot_bode_response(fig, currentSys, cfg.bodeFrequency);
@@ -113,9 +114,6 @@ for mode_id = 1:cfg.Nel
 
         fprintf('FEM Mode %d, CS %d: peak = %.2f dB at %.2f rad/s = %.2f Hz\n', ...
             physicalMode, cs_id, peakGainDb, peakFreqRad, peakFreqHz);
-
-        add_bode_title(sprintf('Bode: %s %d to \\xi_%d, V = %.1f m/s', ...
-            inputLabel, cs_id, physicalMode, models{iV}.V));
 
         apply_plot_style(fig, cfg);
 
@@ -192,6 +190,7 @@ semilogx(axMag, wout, magDb);
 ylabel(axMag, 'Magnitude [dB]');
 grid(axMag, 'on');
 box(axMag, 'on');
+hide_axes_toolbar(axMag);
 
 axPhase = subplot(2, 1, 2);
 semilogx(axPhase, wout, phaseDeg);
@@ -199,8 +198,18 @@ xlabel(axPhase, 'Frequency [rad/s]');
 ylabel(axPhase, 'Phase [deg]');
 grid(axPhase, 'on');
 box(axPhase, 'on');
+hide_axes_toolbar(axPhase);
 
 linkaxes([axMag, axPhase], 'x');
+
+end
+
+% =========================================================================
+function hide_axes_toolbar(ax)
+
+if isprop(ax, 'Toolbar') && ~isempty(ax.Toolbar)
+    ax.Toolbar.Visible = 'off';
+end
 
 end
 
@@ -219,20 +228,5 @@ wout = wout(:);
 
 peakFreqRad = wout(idxPeak);
 peakFreqHz = peakFreqRad / (2*pi);
-
-end
-
-% =========================================================================
-function add_bode_title(titleText)
-
-try
-    titleHandle = sgtitle(titleText);
-    set(titleHandle, 'FontWeight', 'normal');
-catch
-    axesHandles = findall(gcf, 'Type', 'axes');
-    if ~isempty(axesHandles)
-        title(axesHandles(end), titleText, 'FontWeight', 'normal');
-    end
-end
 
 end

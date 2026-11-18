@@ -18,10 +18,12 @@ deltaCommand = deg2rad(cfg_value(cfg, 'responseStepCommandDeg', 1));
 nStrongStrain = cfg_value(cfg, 'responseStrongestStrainCount', 5);
 
 peakRate = zeros(Nctrl, 1);
-peakDisp = zeros(Nctrl, 1);
+peakAcceleration = zeros(Nctrl, 1);
 peakStrain = zeros(Nctrl, 1);
 peakRbm = zeros(Nctrl, 1);
 normBpCol = zeros(Nctrl, 1);
+plotAcceleration = response_enabled(cfg.responsePlots, 'stepAcceleration') || ...
+    response_enabled(cfg.responsePlots, 'stepDisp');
 
 fprintf('\n============================================================\n');
 fprintf('State-space model for response checks\n');
@@ -42,21 +44,22 @@ for csID = 1:Nctrl
     [y, tout] = lsim(sys, inputCommand, time);
 
     peakRate(csID) = max(abs(y(:, outputIndex.rate)), [], 'all');
-    peakDisp(csID) = max(abs(y(:, outputIndex.disp)), [], 'all');
+    peakAcceleration(csID) = max(abs(y(:, outputIndex.acceleration)), [], 'all');
     peakStrain(csID) = max(abs(y(:, outputIndex.strain)), [], 'all');
     peakRbm(csID) = max(abs(y(:, outputIndex.rbm)), [], 'all');
     normBpCol(csID) = norm(model.Bp(:, csID));
 
     if cfg.responsePlots.stepRate
         plot_output_group(cfg, tout, y(:, outputIndex.rate), ...
-            sprintf('Step response: CS %d command to rate outputs', csID), ...
-            'Time [s]', 'Rate outputs', 'Rate output');
+            sprintf('Step response: CS %d command to angular-rate outputs', csID), ...
+            'Time [s]', 'Angular-rate outputs', 'Angular-rate output');
     end
 
-    if cfg.responsePlots.stepDisp
-        plot_output_group(cfg, tout, y(:, outputIndex.disp), ...
-            sprintf('Step response: CS %d command to disp/acc outputs', csID), ...
-            'Time [s]', 'Disp/acc outputs', 'Disp/acc output');
+    if plotAcceleration
+        plot_output_group(cfg, tout, y(:, outputIndex.acceleration), ...
+            sprintf('Step response: CS %d command to linear-acceleration outputs', csID), ...
+            'Time [s]', 'Linear-acceleration outputs', ...
+            'Linear-acceleration output');
     end
 
     strainResponse = y(:, outputIndex.strain);
@@ -81,17 +84,17 @@ for csID = 1:Nctrl
             'Time [s]', 'RBM output', 'RBM output');
     end
 
-    fprintf('Max abs rate response      = %.3e\n', peakRate(csID));
-    fprintf('Max abs disp/acc response  = %.3e\n', peakDisp(csID));
-    fprintf('Max abs strain response    = %.3e\n', peakStrain(csID));
-    fprintf('Max abs RBM response       = %.3e\n', peakRbm(csID));
-    fprintf('Norm of Bp column          = %.3e\n', normBpCol(csID));
+    fprintf('Max abs angular-rate response = %.3e\n', peakRate(csID));
+    fprintf('Max abs acceleration response = %.3e\n', peakAcceleration(csID));
+    fprintf('Max abs strain response       = %.3e\n', peakStrain(csID));
+    fprintf('Max abs RBM response          = %.3e\n', peakRbm(csID));
+    fprintf('Norm of Bp column             = %.3e\n', normBpCol(csID));
 end
 
 CS = (1:Nctrl).';
-peakTable = table(CS, normBpCol, peakRate, peakDisp, peakStrain, peakRbm, ...
-    'VariableNames', {'CS', 'Norm_Bp_Column', 'Peak_Rate', ...
-    'Peak_DispAcc', 'Peak_Strain', 'Peak_RBM'});
+peakTable = table(CS, normBpCol, peakRate, peakAcceleration, peakStrain, peakRbm, ...
+    'VariableNames', {'CS', 'Norm_Bp_Column', 'Peak_AngularRate', ...
+    'Peak_Acceleration', 'Peak_Strain', 'Peak_RBM'});
 
 fprintf('\n============================================================\n');
 fprintf('Peak response comparison table\n');
@@ -103,14 +106,14 @@ end
 function [sys, outputIndex] = build_plant_output_system(cfg, inputs, model)
 
 nStrain = size(inputs.PSI, 1);
-nDisp = size(inputs.PHI, 1);
+nAcceleration = size(inputs.PHI, 1);
 nRate = size(inputs.PHI_ROT, 1);
 nRbm = size(inputs.RBM.modalCoefficients, 1);
 
 outputIndex.strain = 1:nStrain;
-outputIndex.disp = nStrain + (1:nDisp);
-outputIndex.rate = nStrain + nDisp + (1:nRate);
-outputIndex.rbm = nStrain + nDisp + nRate + (1:nRbm);
+outputIndex.acceleration = nStrain + (1:nAcceleration);
+outputIndex.rate = nStrain + nAcceleration + (1:nRate);
+outputIndex.rbm = nStrain + nAcceleration + nRate + (1:nRbm);
 
 nCS = cfg_value(cfg, 'numControlSurfaces', size(model.Bp, 2));
 DaeSelected = select_control_surface_triplets(model.Dae, nCS);
@@ -158,7 +161,6 @@ plot(time, y, 'LineWidth', cfg_value(cfg, 'plotLineWidth', 1.5));
 grid on; box on;
 xlabel(xLabelText);
 ylabel(yLabelText);
-title(titleText);
 
 legendLabels = arrayfun(@(k) sprintf('%s %d', legendPrefix, k), ...
     legendIDs, 'UniformOutput', false);
@@ -181,5 +183,11 @@ if isfield(cfg, fieldName)
 else
     value = defaultValue;
 end
+
+end
+
+function enabled = response_enabled(selection, fieldName)
+
+enabled = isfield(selection, fieldName) && logical(selection.(fieldName));
 
 end

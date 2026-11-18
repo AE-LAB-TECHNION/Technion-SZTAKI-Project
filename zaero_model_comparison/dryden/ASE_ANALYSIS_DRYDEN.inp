@@ -15,7 +15,7 @@ SUBCASE = 2
         SUBTITLE= FREQUENCY DOMAIN FLUTTER ANALYSIS M=0.0 SEA LEVEL
         FLUTTER = 100
 SUBCASE = 3
-        SUBTITLE = ONE-MINUS-COSINE GUST FREQUENCY-DOMAIN REFERENCE
+        SUBTITLE = CONTINUOUS DRYDEN GUST AT 35 M/S
         GLOADS = 200
 BEGIN BULK
 $
@@ -182,40 +182,74 @@ $------------------------------------------------------------------------------$
 $                              RFA calculations
 $------------------------------------------------------------------------------$
 $--1---><--2---><--3---><--4---><--5---><--6---><--7---><--8---><--9---><--10-->
-MINSTAT 170     120     100     10      0       0                        +BC
-+BC     -2      SAVE    APPROX_freq.DAT         120
+MINSTAT 170     120     100     10      0       0                        +BCA
++BCA    -2      SAVE    APPROX_ASE5.DAT         120
+MINSTAT 171     120     100     11      0       0                        +BCG
++BCG    -2      SAVE    APPROX.DAT              120
 
 $       SID     NLAG    R1                                              
-AEROLAG 120     20      0.0
-APCONST 10      1       1       0       1       1       1       1
-APCNSND 10      1       1       1       -1      0
+AEROLAG 120     5       0.0
+APCONST 10      1       -1      -1      1       1       1       1
+APCONST 11      1       -1      -1      1       2       1       1       +APG
++APG    8
+APCNSND 11      1       2       1       -1      0
 $------------------------------------------------------------------------------$
 $                              FLUTTER ANALYSIS
 $------------------------------------------------------------------------------$
 FLUTTER 100     SYM     100     3       0                       30
 
 FIXMDEN 100     100     1.225   KG      M       1.0     0       1       +
+$ OMCOS/flutter multi-speed list (restore when reactivating the OMCOS block):
+$+      25.0    30.0    35.0    37.0    39.0    40.0    42.0    50.0
 +       35.0
 
-PLTVG   11      100     8       V               VG_FREQ.PLT
+PLTVG   11      100     8       V               VG_P5.PLT
 $------------------------------------------------------------------------------$
-$                   GLOADS ANALYSIS: ONE-MINUS-COSINE GUST
+$            INACTIVE GLOADS ANALYSIS: ONE-MINUS-COSINE GUST
 $------------------------------------------------------------------------------$
 
 GENGUST 100     100     SYM     1       90.0    0.0     0.0     0       +GG1
 +GG1    0.0
 
-GLOADS  200     251     100     0               10      10      100     +GL
-+GL     SAVE    FORMAT  QHGFREQ
+$GLOADS 200     251     100     -171            10      10      100     +GL
+$+GL    SAVE    FORMAT  QHGP5
 
-MLDTIME 10      0.0     20.0    0.001   1       0
+$MLDTIME 10     0.0     20.0    0.001   1       0
 
-MLDPRNT 100     GUSTFREQ        TABLE   TIME                    YES     +MP1
-+MP1    MODALX  1       MODALX  2       MODALX  3                       +MP2
-+MP2    MODALV  1       MODALV  2       MODALV  3
+$MLDPRNT 100    GUSTP5          TABLE   TIME                    YES     +MP1
+$+MP1   MODALX  1       MODALX  2       MODALX  3                       +MP2
+$+MP2   MODALV  1       MODALV  2       MODALV  3
 
-$       SID     TYPE    LG      WGV     X0      FMAX    DF
-DGUST   10      OMCOSP  1.0     0.1     0.0     90.0    0.01
+$ OMCOSP is a one-minus-cosine gust; the P option also prints the gust profile.
+$ GENGUST 100 defines one symmetric vertical gust zone: ALPHA=90 deg, BETA=0 deg.
+$       SID     TYPE    LG      WGV     X0      FMAX    DF      NAP
+$DGUST  10      OMCOSP  1.0     0.1     0.0     90.0    0.001
+$------------------------------------------------------------------------------$
+$                   GLOADS ANALYSIS: CONTINUOUS DRYDEN GUST
+$------------------------------------------------------------------------------$
+
+GLOADS  200     251     100     0               10              100     +GL
++GL     SAVE    FORMAT  QHGD5
+
+$       SID     TYPE    LG      VINV    X0      FMAX    DF      GURMS
+CGUST   10      DRYP    0.75    0.0285710.0     100.0   -0.01   0.7
+
+MLDPRNT 100     DRY5.PLT        TABLE   PSD     0.0     100.0   NO      +MP1
++MP1    MODALX  1       MODALX  2       MODALX  3       MODALV  1       +MP2
++MP2    MODALV  2       MODALV  3
+
+CROSPSD 101     MODALX  1               1
+CROSPSD 102     MODALX  2               2
+CROSPSD 103     MODALX  3               3
+CROSPSD 104     MODALV  1               1
+CROSPSD 105     MODALV  2               2
+CROSPSD 106     MODALV  3               3
+
+MLDPRNT 100     DRYP5.P         TABLE   PSD     0.0     100.0   NO      +PS1
++PS1    CROSPSD 101     CROSPSD 102     CROSPSD 103     CROSPSD 104     +PS2
++PS2    CROSPSD 105     CROSPSD 106
+
+FREQ1   300     0.0     0.01    10000
 $------------------------------------------------------------------------------$
 $              Definition of Concentrated Mass Elements
 $------------------------------------------------------------------------------$
@@ -239,16 +273,16 @@ $ASEOUT  1004    200     1       PLANT           ./Plats/gust20.0
 $ASEOUT  1005    200     1       PLANT           ./Plants/gust21.0
 $ASEOUT  1006    200     1       PLANT           ./Plants/gust22.0
 $ASEOUT  1007    200     1       PLANT           gust23.0
-$ASEOUT  1002    100     1       PLANT           ./Plants/P20MS.0
-$ASEOUT   1001   100     1        AEMODEL         gust25.0
-$ASEOUT   1002   100     2        AEMODEL         gust30.0
-$ASEOUT   1003    100     1       AEMODEL         GUST35  FORMAT
+$ASEOUT  1002    100     1       PLANT           ./Plants/P5MS.0
+ASEOUT  1001    100     1       AEMODEL         gust25.0
+ASEOUT  1002    100     2       AEMODEL         gust30.0
+ASEOUT  1003    100     3       AEMODEL         gust35.0
 $ No frequency-domain DRYFRF output is requested in the OMCOS run.
-$ASEOUT   1004   100     4        AEMODEL         gust37.0
-$ASEOUT   1005   100     5        AEMODEL         gust39.0
-$ASEOUT   1006   100     6        AEMODEL         gust40.0
-$ASEOUT   1007   100     7        AEMODEL         gust42.0
-$ASEOUT   1008   100     8        AEMODEL         gust50.0
+ASEOUT  1004    100     4       AEMODEL         gust37.0
+ASEOUT  1005    100     5       AEMODEL         gust39.0
+ASEOUT  1006    100     6       AEMODEL         gust40.0
+ASEOUT  1007    100     7       AEMODEL         gust42.0
+ASEOUT  1008    100     8       AEMODEL         gust50.0
 $ Preserve the validated RBM files produced by the Dryden/RBM run.
 $ASEOUT 1200    100     1       AEMODEL         AERBM.S
 $ASEOUT 1201    100     1       PLANT           PLTRBM.S
@@ -256,16 +290,39 @@ $------------------------------------------------------------------------------$
 $                            RFA Output Files
 $------------------------------------------------------------------------------$
 $--1---><--2---><--3---><--4---><--5---><--6---><--7---><--8---><--9---><--10-->
-PLTMIST  10001   100     1       1                      FREQi1j1.txt
-PLTMIST  10002   100     1       2                      FREQi1j2.txt
-PLTMIST  10003   100     1       3                      FREQi1j3.txt
+PLTMIST  10001   100     1       1                      QHH5I1J1.TXT
+PLTMIST  10002   100     1       2                      QHH5I1J2.TXT
+PLTMIST  10003   100     1       3                      QHH5I1J3.TXT
 
-PLTMIST  10009   100     2       1                      FREQi2j1.txt
-PLTMIST  10010   100     2       2                      FREQi2j2.txt
-PLTMIST  10011   100     2       3                      FREQi2j3.txt
+PLTMIST  10009   100     2       1                      QHH5I2J1.TXT
+PLTMIST  10010   100     2       2                      QHH5I2J2.TXT
+PLTMIST  10011   100     2       3                      QHH5I2J3.TXT
 
-PLTMIST  10017   100     3       1                      FREQi3j1.txt
-PLTMIST  10018   100     3       2                      FREQi3j2.txt
-PLTMIST  10019   100     3       3                      FREQi3j3.txt
+PLTMIST  10017   100     3       1                      QHH5I3J1.TXT
+PLTMIST  10018   100     3       2                      QHH5I3J2.TXT
+PLTMIST  10019   100     3       3                      QHH5I3J3.TXT
+
+$ QHC: structural-mode rows 1-3 and control-surface columns 4-7 (CF1-CF4)
+PLTMIST  10004   100     1       4                      QHC5I1J1.TXT
+PLTMIST  10005   100     1       5                      QHC5I1J2.TXT
+PLTMIST  10006   100     1       6                      QHC5I1J3.TXT
+PLTMIST  10007   100     1       7                      QHC5I1J4.TXT
+
+PLTMIST  10012   100     2       4                      QHC5I2J1.TXT
+PLTMIST  10013   100     2       5                      QHC5I2J2.TXT
+PLTMIST  10014   100     2       6                      QHC5I2J3.TXT
+PLTMIST  10015   100     2       7                      QHC5I2J4.TXT
+
+PLTMIST  10020   100     3       4                      QHC5I3J1.TXT
+PLTMIST  10021   100     3       5                      QHC5I3J2.TXT
+PLTMIST  10022   100     3       6                      QHC5I3J3.TXT
+PLTMIST  10023   100     3       7                      QHC5I3J4.TXT
+
+$ QHG: GLOADS 200, structural-mode rows 1-3, gust column NH+NC+1=8
+PLTMIST  10008   200     1       8                      QHG5I1J1.TXT
+PLTMIST  10016   200     2       8                      QHG5I2J1.TXT
+PLTMIST  10024   200     3       8                      QHG5I3J1.TXT
 $------------------------------------------------------------------------------$
 ENDDATA
+
+

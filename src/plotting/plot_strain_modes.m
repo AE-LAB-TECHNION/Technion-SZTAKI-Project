@@ -41,11 +41,13 @@ if numel(strainX) ~= size(PSI, 1)
 end
 
 for im = 1:min(numel(selectedModes), size(PSI, 2))
-    modeNumber = selectedModes(im);
+    physicalModeNumber = selectedModes(im);
+    modeNumber = im;
     strainMode = PSI(:, im);
     valid = ~isnan(strainX) & ~isnan(strainY) & ~isnan(strainMode);
 
-    fprintf('Mode %d: valid strain points = %d\n', modeNumber, sum(valid));
+    fprintf('Retained mode %d (FEM mode %d): valid strain points = %d\n', ...
+        modeNumber, physicalModeNumber, sum(valid));
 
     if ~any(valid)
         warning('No valid strain points for mode %d. Skipping.', modeNumber);
@@ -73,12 +75,12 @@ for im = 1:min(numel(selectedModes), size(PSI, 2))
     fig3d = figure('Name', sprintf('3D Strain Mode Shape - Mode %d', modeNumber));
     apply_plot_style(fig3d, cfg);
     scatter3(x, y, zPlot, 35, zPlot, 'filled');
+    hide_axes_toolbar(gca);
     grid on; box on;
     view(45, 25);
     xlabel('X [model units]');
     ylabel('Y [model units]');
     zlabel(zLabelText);
-    title(sprintf('3D Strain Mode Shape - Mode %d', modeNumber));
     cb = colorbar;
     cb.Label.String = zLabelText;
     apply_plot_style(fig3d, cfg);
@@ -86,11 +88,11 @@ for im = 1:min(numel(selectedModes), size(PSI, 2))
     figTop = figure('Name', sprintf('Top View Strain Mode - Mode %d', modeNumber));
     apply_plot_style(figTop, cfg);
     scatter(x, y, 40, zPlot, 'filled');
+    hide_axes_toolbar(gca);
     grid on; box on;
     axis equal;
     xlabel('X [model units]');
     ylabel('Y [model units]');
-    title(sprintf('Top View of Strain Mode - Mode %d', modeNumber));
     cb = colorbar;
     cb.Label.String = zLabelText;
     apply_plot_style(figTop, cfg);
@@ -295,6 +297,14 @@ if isempty(regexpi(s,'[Ee]','once'))
 end
 
 val = NaN;
+
+end
+
+function hide_axes_toolbar(ax)
+
+if isprop(ax, 'Toolbar') && ~isempty(ax.Toolbar)
+    ax.Toolbar.Visible = 'off';
+end
 
 end
 

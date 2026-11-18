@@ -6,7 +6,9 @@ colors = lines(response.Nel);
 fig = figure('Name','Dryden modal-response PSD');
 tiledlayout(1,2,'TileSpacing','compact','Padding','compact');
 
-nexttile; hold on;
+axX = nexttile;
+set(axX,'XScale','log','YScale','log');
+hold(axX,'on');
 for k = 1:response.Nel
     loglog(response.frequency(positive),response.modalXPsd(positive,k), ...
         'Color',colors(k,:),'LineWidth',cfg.plotLineWidth);
@@ -17,7 +19,9 @@ displacementLabels = arrayfun(@(k) sprintf('\\xi_%d',k), ...
     1:response.Nel,'UniformOutput',false);
 legend(displacementLabels,'Location','northeast');
 
-nexttile; hold on;
+axV = nexttile;
+set(axV,'XScale','log','YScale','log');
+hold(axV,'on');
 for k = 1:response.Nel
     loglog(response.frequency(positive),response.modalVPsd(positive,k), ...
         'Color',colors(k,:),'LineWidth',cfg.plotLineWidth);

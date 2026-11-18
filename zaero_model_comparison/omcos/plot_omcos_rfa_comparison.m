@@ -10,6 +10,12 @@ if nargin < 2
 end
 
 comparisonDirectory = fileparts(mfilename('fullpath'));
+requiredLegacyFiles = ["GUSTFREQ", "GUSTXI", "GUSTP20"];
+if ~all(isfile(fullfile(comparisonDirectory,requiredLegacyFiles)))
+    error(['The legacy OMCOS comparison data are no longer included. ', ...
+        'Use plot_gust_validation for the current partitioned five-lag model.']);
+end
+
 reference = read_modal_response(fullfile(comparisonDirectory,'GUSTFREQ'));
 oldRfa = read_modal_response(fullfile(comparisonDirectory,'GUSTXI'));
 partitionedRfa = read_modal_response(fullfile(comparisonDirectory,'GUSTP20'));

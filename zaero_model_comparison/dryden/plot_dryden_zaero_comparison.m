@@ -12,7 +12,7 @@ function comparison = plot_dryden_zaero_comparison(cfg,response)
 %   computed from the full augmented model without ZAERO QHG data
 %
 % ZAERO PSD:
-%   read from CROSPSD 101:106 in DRYPSD.P
+%   read from CROSPSD 101:106 in the configured ZAERO PSD file
 %
 % Usage:
 %
@@ -92,7 +92,8 @@ positive = f > 0;
 
 fig = figure( ...
     'Name','MATLAB--ZAERO Dryden modal PSD comparison', ...
-    'Color','white');
+    'Color','white', ...
+    'Position',[100 100 1200 900]);
 
 tiledlayout( ...
     nModes,2, ...
@@ -107,6 +108,7 @@ for k = 1:nModes
     % Modal displacement PSD
     % -------------------------------------------------------------
     axX = nexttile;
+    set(axX,'XScale','log','YScale','log');
     hold(axX,'on');
 
     if isempty(firstAxis)
@@ -133,6 +135,7 @@ for k = 1:nModes
     % Modal velocity PSD
     % -------------------------------------------------------------
     axV = nexttile;
+    set(axV,'XScale','log','YScale','log');
     hold(axV,'on');
 
     loglog(axV, ...
@@ -153,7 +156,9 @@ for k = 1:nModes
 
 end
 
-legend(firstAxis,{'MATLAB','ZAERO'},'Location','best');
+legend(firstAxis,{'MATLAB','ZAERO'}, ...
+    'Location','southwest', ...
+    'FontSize',max(8,cfg.plotFontSize-2));
 
 if exist('apply_plot_style','file') == 2
     apply_plot_style(fig,cfg);

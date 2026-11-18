@@ -12,11 +12,20 @@ if selection.rbmBode
     response.rbmBode = plot_rbm_control_response(cfg, models);
 end
 
-runStep = selection.stepRate || selection.stepDisp || ...
-    selection.stepStrain || selection.stepRbm;
+runStep = response_enabled(selection, 'stepRate') || ...
+    response_enabled(selection, 'stepAcceleration') || ...
+    response_enabled(selection, 'stepDisp') || ...
+    response_enabled(selection, 'stepStrain') || ...
+    response_enabled(selection, 'stepRbm');
 
 if runStep
     response.stepPeaks = plot_step_response_checks(cfg, inputs, models);
 end
+
+end
+
+function enabled = response_enabled(selection, fieldName)
+
+enabled = isfield(selection, fieldName) && logical(selection.(fieldName));
 
 end

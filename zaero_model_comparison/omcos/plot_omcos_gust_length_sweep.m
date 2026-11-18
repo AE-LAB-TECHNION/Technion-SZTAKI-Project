@@ -175,6 +175,16 @@ end
 
 grid on;
 box on;
+hide_axes_toolbar(gca);
+
+end
+
+% =========================================================================
+function hide_axes_toolbar(ax)
+
+if isprop(ax, 'Toolbar') && ~isempty(ax.Toolbar)
+    ax.Toolbar.Visible = 'off';
+end
 
 end
 

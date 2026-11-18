@@ -5,9 +5,10 @@ function approximation (RFA). The plant includes actuator dynamics,
 strain, displacement/acceleration, rate and RBM measurements, and a
 three-state Dryden shaping filter.
 
-The current model uses 20 structural aerodynamic lag states and 20 gust
-aerodynamic lag states. With the 6 structural states, 12 actuator states
-and 3 Dryden states, the augmented model contains 61 states.
+The current partitioned RFA model uses five structural/control aerodynamic
+lag states and five gust aerodynamic lag states. With the 6 structural
+states, 12 actuator states and 3 Dryden states, the augmented model contains
+31 states.
 
 ## Run
 
@@ -36,7 +37,7 @@ Processing Toolbox.
 
 The files required for the standard MATLAB run are stored in `data/model`:
 
-- the 20-lag OMCOS RFA file;
+- the partitioned five-lag RFA file (`APPROX.DAT`);
 - the matching ZAERO modal output;
 - the RBM state-space output;
 - the F06 structural data and its sensor-matrix cache.
@@ -47,9 +48,9 @@ Select the required input-output plots in `default_analysis_config.m`:
 
 ```matlab
 cfg.responsePlots.modalBode = false;
-cfg.responsePlots.rbmBode = true;
+cfg.responsePlots.rbmBode = false;
 cfg.responsePlots.stepRate = false;
-cfg.responsePlots.stepDisp = false;
+cfg.responsePlots.stepAcceleration = false;
 cfg.responsePlots.stepStrain = false;
 cfg.responsePlots.stepRbm = false;
 ```

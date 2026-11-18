@@ -3,7 +3,7 @@ function result = plot_gust_validation(cfg, models)
 %
 % This function compares ZAERO MLDPRNT output with the MATLAB aeroelastic model.
 %
-% ZAERO expected MLDPRNT order in GUSTXI.DAT:
+% ZAERO expected MLDPRNT order in the configured response file:
 %   TIME, MODALV(1:Nel), MODALX(1:Nel)
 %
 % MATLAB model:
@@ -106,7 +106,12 @@ fprintf('Baw size: %d x %d\n', size(model.Baw, 1), size(model.Baw, 2));
 fprintf('DGUST interpretation: LG = %.6g s, WGV = %.6g, ramp time = %.6g s\n', ...
     gust.LG, gust.WGV, gust.Tg);
 
-Mode = (1:Nel).';
+femModeNumbers = cfg.selected_modes(:);
+if numel(femModeNumbers) ~= Nel
+    error('Expected %d retained FEM-mode labels, but cfg.selected_modes contains %d.', ...
+        Nel, numel(femModeNumbers));
+end
+displayModeNumbers = (1:Nel).';
 
 rmsModalX = result.rms.modalX(:);
 peakModalX = result.peakAbs.modalX(:);
@@ -119,11 +124,11 @@ peakZaeroV = max(abs(zaero.modalV), [], 1).';
 peakMatlabV = max(abs(codeCompare.modalV), [], 1).';
 
 summaryTable = table( ...
-    Mode, ...
+    femModeNumbers, ...
     rmsModalX, peakModalX, peakZaeroX, peakMatlabX, ...
     rmsModalV, peakModalV, peakZaeroV, peakMatlabV, ...
     'VariableNames', { ...
-        'Mode', ...
+        'FEM_Mode', ...
         'RMS_X', 'PeakErr_X', 'PeakZAERO_X', 'PeakMATLAB_X', ...
         'RMS_V', 'PeakErr_V', 'PeakZAERO_V', 'PeakMATLAB_V'});
 
@@ -134,7 +139,7 @@ result.summaryTable = summaryTable;
 % Plots
 % -------------------------------------------------------------------------
 plot_gust_input(cfg,code.time,gust);
-plot_modal_overlay(cfg, code, codeCompare, zaero, Nel);
+plot_modal_overlay(cfg, code, codeCompare, zaero, displayModeNumbers);
 
 end
 
@@ -180,7 +185,7 @@ if isempty(rows)
     error('No numeric modal time-response rows were found in %s.', filename);
 end
 
-% Actual ZAERO GUSTXI.DAT order observed:
+% Actual ZAERO response-file order observed:
 % TIME, MODALV(1:Nel), MODALX(1:Nel)
 response.time   = rows(:, 1);
 response.modalV = rows(:, 1 + (1:Nel));
@@ -248,9 +253,10 @@ gust.wdot = wdot;
 end
 
 % =========================================================================
-function plot_modal_overlay(cfg, code, codeCompare, zaero, Nel)
+function plot_modal_overlay(cfg, code, codeCompare, zaero, femModeNumbers)
 
 timeLimit = min(5, zaero.time(end));
+Nel = numel(femModeNumbers);
 
 % -------------------------------------------------------------------------
 % Modal displacement
@@ -261,6 +267,8 @@ apply_plot_style(fig, cfg);
 tiledlayout(Nel, 2, 'TileSpacing', 'compact');
 
 for k = 1:Nel
+
+    modeNumber = femModeNumbers(k);
 
     nexttile(2*k - 1);
 
@@ -283,11 +291,11 @@ for k = 1:Nel
 
     grid on; box on;
     xlim([0, timeLimit]);
-    ylabel(sprintf('\\xi_%d', k));
+    ylabel(sprintf('\\xi_%d', modeNumber));
 
     if k == 1
         legend({'MATLAB fine', 'ZAERO', 'MATLAB sampled', 'Sample points'}, ...
-            'Location', 'best');
+            'Location', 'northeast');
     end
 
     nexttile(2*k);
@@ -302,7 +310,7 @@ for k = 1:Nel
 
     grid on; box on;
     xlim([0, timeLimit]);
-    ylabel(sprintf('\\Delta \\xi_%d', k));
+    ylabel(sprintf('\\Delta \\xi_%d', modeNumber));
 
 end
 
@@ -318,6 +326,8 @@ apply_plot_style(fig, cfg);
 tiledlayout(Nel, 2, 'TileSpacing', 'compact');
 
 for k = 1:Nel
+
+    modeNumber = femModeNumbers(k);
 
     nexttile(2*k - 1);
 
@@ -340,11 +350,11 @@ for k = 1:Nel
 
     grid on; box on;
     xlim([0, timeLimit]);
-    ylabel(sprintf('d\\xi_%d/dt', k));
+    ylabel(sprintf('d\\xi_%d/dt', modeNumber));
 
     if k == 1
         legend({'MATLAB fine', 'ZAERO', 'MATLAB sampled', 'Sample points'}, ...
-            'Location', 'best');
+            'Location', 'northeast');
     end
 
     nexttile(2*k);
@@ -359,7 +369,7 @@ for k = 1:Nel
 
     grid on; box on;
     xlim([0, timeLimit]);
-    ylabel(sprintf('\\Delta(d\\xi_%d/dt)', k));
+    ylabel(sprintf('\\Delta(d\\xi_%d/dt)', modeNumber));
 
 end
 

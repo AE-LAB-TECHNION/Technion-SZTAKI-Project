@@ -109,14 +109,8 @@ function labels = mode_labels(cfg, numModes)
 
 labels = cell(1, numModes);
 
-if isfield(cfg, 'selected_modes') && numel(cfg.selected_modes) >= numModes
-    for modeIdx = 1:numModes
-        labels{modeIdx} = sprintf('F06 mode %d', cfg.selected_modes(modeIdx));
-    end
-else
-    for modeIdx = 1:numModes
-        labels{modeIdx} = sprintf('Mode %d', modeIdx);
-    end
+for modeIdx = 1:numModes
+    labels{modeIdx} = sprintf('Mode %d', modeIdx);
 end
 
 end

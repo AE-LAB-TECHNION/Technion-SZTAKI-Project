@@ -36,11 +36,11 @@ for k = 1:numel(solverNames)
     comparison.(name).errorV = sampledV - zaero.modalV;
 end
 
-plot_solver_errors(cfg, comparison, zaeroTime, Nel);
+plot_solver_errors(cfg, comparison, zaeroTime, Nel, 1:Nel);
 
 end
 
-function plot_solver_errors(cfg, comparison, time, Nel)
+function plot_solver_errors(cfg, comparison, time, Nel, femModeNumbers)
 
 solverNames = {'lsim', 'ode45', 'ode113', 'expm'};
 solverLabels = {'lsim', 'ode45', 'ode113', 'expm'};
@@ -58,6 +58,7 @@ apply_plot_style(fig, cfg);
 tiledlayout(2, 3, 'TileSpacing', 'compact', 'Padding', 'compact');
 
 for modeIndex = 1:nPlotModes
+    modeNumber = femModeNumbers(modeIndex);
     nexttile;
     hold on;
     for solverIndex = 1:numel(solverNames)
@@ -70,7 +71,7 @@ for modeIndex = 1:nPlotModes
     yline(0, ':', 'Color', [0.45 0.45 0.45]);
     grid on; box on;
     xlim([0, timeLimit]);
-    title(sprintf('MODALX error, mode %d', modeIndex));
+    title(sprintf('MODALX error, mode %d', modeNumber));
     xlabel('Time [s]');
     ylabel('\Delta\xi');
     if modeIndex == 1
@@ -79,6 +80,7 @@ for modeIndex = 1:nPlotModes
 end
 
 for modeIndex = 1:nPlotModes
+    modeNumber = femModeNumbers(modeIndex);
     nexttile;
     hold on;
     for solverIndex = 1:numel(solverNames)
@@ -91,7 +93,7 @@ for modeIndex = 1:nPlotModes
     yline(0, ':', 'Color', [0.45 0.45 0.45]);
     grid on; box on;
     xlim([0, timeLimit]);
-    title(sprintf('MODALV error, mode %d', modeIndex));
+    title(sprintf('MODALV error, mode %d', modeNumber));
     xlabel('Time [s]');
     ylabel('\Delta(d\xi/dt)');
 end
